@@ -25,15 +25,12 @@
                 </Button>
             </ToolBar>
         </StackPanel>
-        <ListBox
+        <ListBox x:Name="instList"
                 DockPanel.Dock="Bottom"
                 Background="#FF1B1B1B"
                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                ScrollViewer.VerticalScrollBarVisibility="Visible">
-            <Label Foreground="White" FontSize="14" Padding="0" Content="Line1 Line1 Line1 Line1 Line1 Line1 Line1 Line1 Line1 Line1" MouseDoubleClick="Label_MouseDoubleClick"/>
-            <Label Foreground="White" FontSize="14" Padding="0" Content="Line2 Line2 Line2 Line2 Line2 Line2 Line2 Line2 Line2 Line2" MouseDoubleClick="Label_MouseDoubleClick"/>
-            <Label Foreground="White" FontSize="14" Padding="0" Content="Line3 Line3 Line3 Line3 Line3 Line3 Line3 Line3 Line3 Line3" MouseDoubleClick="Label_MouseDoubleClick"/>
-            <Label Foreground="White" FontSize="14" Padding="0" Content="Line4 Line4 Line4 Line4 Line4 Line4 Line4 Line4 Line4 Line4" MouseDoubleClick="Label_MouseDoubleClick"/>
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                HorizontalContentAlignment="Stretch">
         </ListBox>
     </DockPanel>
 </Window>

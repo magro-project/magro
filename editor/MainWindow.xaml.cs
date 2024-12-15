@@ -1,19 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace editor
 {
@@ -39,9 +27,12 @@ namespace editor
 
         private void ShowVersion_Click(object sender, RoutedEventArgs e)
         {
-            //var assemblyName = Assembly.GetExecutingAssembly().GetName();
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            MessageBox.Show($"Magro\r\nVersion: {fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}.{fileVersionInfo.FileBuildPart}", "バージョン情報");
+            new VersionWindow(this).ShowDialog();
+        }
+
+        private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            MessageBox.Show("MouseDoubleClick");
         }
     }
 }

@@ -1,0 +1,29 @@
+﻿<Window x:Class="editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:editor"
+        mc:Ignorable="d"
+        Title="magro/editor" Width="960" Height="720">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Menu>
+                <MenuItem Header="ファイル(_F)"  Height="24">
+                    <MenuItem Header="閉じる(_X)" Click="Close_Click"/>
+                </MenuItem>
+                <MenuItem Header="ヘルプ(_H)"  Height="24" >
+                    <MenuItem Header="バージョン情報" Click="ShowVersion_Click"/>
+                </MenuItem>
+            </Menu>
+            <ToolBar>
+                <Button Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Icons\Play.png" Width="16"/>
+                        <Label Content="実行" Padding="0"/>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </StackPanel>
+    </DockPanel>
+</Window>

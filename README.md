@@ -5,7 +5,7 @@ A toolset for anyone to create 2D games.
 - magro/runtime (Go)
 - magro/editor (C#)
 
-## Relases
+## Releases
 Not yet released.
 
 ## License

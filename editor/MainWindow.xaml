@@ -10,14 +10,33 @@
         <StackPanel DockPanel.Dock="Top">
             <Menu>
                 <MenuItem Header="ファイル(_F)"  Height="24">
-                    <MenuItem Header="閉じる(_X)" Click="Close_Click"/>
+                    <MenuItem Header="保存(_S)" Click="Save_Click">
+                        <MenuItem.Icon>
+                            <Image Width="16" Source="Icons\Save.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Header="開く(_O)" Click="Open_Click">
+                        <MenuItem.Icon>
+                            <Image Width="16" Source="Icons\OpenFolder.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Header="終了(_X)" Click="Close_Click"/>
                 </MenuItem>
-                <MenuItem Header="ヘルプ(_H)"  Height="24" >
+                <MenuItem Header="ツール(_T)"  Height="24">
+                    <MenuItem Header="オプション" Click="Option_Click">
+                        <MenuItem.Icon>
+                            <Image Width="16" Source="Icons\Settings.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="ヘルプ(_H)"  Height="24">
                     <MenuItem Header="バージョン情報" Click="ShowVersion_Click"/>
                 </MenuItem>
             </Menu>
             <ToolBar>
-                <Button Click="Button_Click">
+                <Button Click="ExecButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Icons\Play.png" Width="16"/>
                         <Label Content="実行" Padding="0"/>
@@ -25,7 +44,7 @@
                 </Button>
             </ToolBar>
         </StackPanel>
-        <ListBox x:Name="instList"
+        <ListBox x:Name="InstListBox"
                 DockPanel.Dock="Bottom"
                 Background="#FF1B1B1B"
                 ScrollViewer.HorizontalScrollBarVisibility="Visible"

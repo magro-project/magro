@@ -130,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\Play.png" />
+    <Resource Include="Icons\OpenFolder.png" />
+    <Resource Include="Icons\Save.png" />
+    <Resource Include="Icons\Settings.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

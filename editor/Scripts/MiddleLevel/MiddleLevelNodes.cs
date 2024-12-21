@@ -76,8 +76,10 @@ namespace Magro.Scripts.MiddleLevel
     {
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.ModuleDeclaration;
 
-        public string Name { get; set; }
+        // semantics
         public List<IDeclaration> Declarations { get; set; } = new List<IDeclaration>();
+
+        public string Name { get; set; }
         public List<IStatement> Statements { get; set; }
     }
 
@@ -142,7 +144,9 @@ namespace Magro.Scripts.MiddleLevel
     {
         public StatementKind StatementKind { get; } = StatementKind.Block;
 
+        // semantics
         public List<IDeclaration> Declarations { get; set; } = new List<IDeclaration>();
+
         public List<IStatement> Statements { get; set; }
     }
 
@@ -158,8 +162,8 @@ namespace Magro.Scripts.MiddleLevel
     internal class ValueExpression : IExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.ValueExpression;
-        public ValueKind ValueKind { get; set; }
 
+        public ValueKind ValueKind { get; set; }
         public object Value { get; set; }
     }
 
@@ -168,8 +172,10 @@ namespace Magro.Scripts.MiddleLevel
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.ReferenceExpression;
 
-        public string Name { get; set; }
+        // semantics
         public IDeclaration ResolvedDeclaration { get; set; }
+
+        public string Name { get; set; }
     }
 
     // Target[...Indexes]
@@ -200,8 +206,8 @@ namespace Magro.Scripts.MiddleLevel
     internal class LogicOperator : IExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.LogicOperator;
-        public LogicOperatorKind LogicOperationKind { get; set; }
 
+        public LogicOperatorKind LogicOperatorKind { get; set; }
         public IExpression Left { get; set; }
         public IExpression Right { get; set; }
     }
@@ -209,8 +215,8 @@ namespace Magro.Scripts.MiddleLevel
     internal class MathOperator : IExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.MathOperator;
-        public MathOperatorKind MathOperationKind { get; set; }
 
+        public MathOperatorKind MathOperatorKind { get; set; }
         public IExpression Left { get; set; }
         public IExpression Right { get; set; }
     }

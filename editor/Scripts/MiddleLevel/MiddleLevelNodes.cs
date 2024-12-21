@@ -2,113 +2,205 @@
 
 namespace Magro.Scripts.MiddleLevel
 {
-    internal class Module
+    internal interface IStatement
     {
-        public string Name { get; set; }
-
-        public List<Instruction> Instructions { get; set; }
-
-        public Module(string name)
-        {
-            Name = name;
-            Instructions = new List<Instruction>();
-        }
-
-        public Module(string name, List<Instruction> instructions)
-        {
-            Name = name;
-            Instructions = instructions;
-        }
+        StatementKind StatementKind { get; }
     }
 
-    internal class Instruction
+    internal interface IDeclaration
     {
-        public InstructionKind Kind { get; set; }
-
-        public List<object> Children { get; set; }
-
-        public Instruction(InstructionKind kind)
-        {
-            Kind = kind;
-            Children = new List<object>();
-        }
-
-        public Instruction(InstructionKind kind, List<object> children)
-        {
-            Kind = kind;
-            Children = children;
-        }
+        DeclarationKind DeclarationKind { get; }
+        string Name { get; set; }
     }
 
-    internal enum InstructionKind
+    internal interface IExpression
     {
-        Declare,  // var A = B;              : (string name, Expression? expr)
-        Assign,   // A = B;                  : (AssignKind kind, Expression target, Expression expr)
-        Inc,      // A++;                    : (Expression target)
-        Dec,      // A--;                    : (Expression target)
-        If,       // if A { B } else { C }   : (Expression expr, List<Instruction> then, List<Instruction> else)
-        Call,     // A(...B)                 : (Expression target, List<Expression> args)
+        ExpressionKind ExpressionKind { get; }
     }
 
-    internal enum AssignKind
+    internal enum StatementKind
     {
-        Basic, // A = B
-        Add,   // A += B
-        Sub,   // A -= B
-        Mul,   // A *= B
-        Div,   // A /= B
-        Rem,   // A %= B
+        VariableDeclaration,
+        FunctionDeclaration,
+        AssignStatement,
+        IncrementStatement,
+        DecrementStatement,
+        IfStatement,
+        Block,
+        ExpressionStatement,
     }
 
-
-
-    internal class Expression
+    internal enum DeclarationKind
     {
-        public ExpressionKind Kind { get; set; }
-
-        public List<object> Children { get; set; }
-
-        public Expression(ExpressionKind kind)
-        {
-            Kind = kind;
-            Children = new List<object>();
-        }
-
-        public Expression(ExpressionKind kind, List<object> children)
-        {
-            Kind = kind;
-            Children = children;
-        }
+        ModuleDeclaration,
+        FunctionDeclaration,
+        VariableDeclaration,
     }
 
     internal enum ExpressionKind
     {
-        ImmediateValue, // (object value) : A
-        VariableRef,    // (string name) : A
-        Index,          // (Expression target, List<Expression> indexes) : A[...B]
-        Equal,          // (Expression left, Expression right) : A == B
-        NotEqual,       // (Expression left, Expression right) : A != B
-        Add,            // (Expression left, Expression right) : A + B
-        Sub,            // (Expression left, Expression right) : A - B
-        Mul,            // (Expression left, Expression right) : A * B
-        Div,            // (Expression left, Expression right) : A / B
-        Rem,            // (Expression left, Expression right) : A % B
+        ValueExpression,
+        ReferenceExpression,
+        IndexExpression,
+        CallExpression,
+        NotOperator,
+        LogicOperator,
+        MathOperator,
     }
 
-
-
-    internal class Function
+    internal enum LogicOperatorKind
     {
-        public List<Instruction> Instructions { get; set; }
+        Equal,      // Left == Right
+        NotEqual,   // Left != Right
+    }
 
-        public Function(string name)
-        {
-            Instructions = new List<Instruction>();
-        }
+    internal enum MathOperatorKind
+    {
+        Add, // Left + Right
+        Sub, // Left - Right
+        Mul, // Left * Right
+        Div, // Left / Right
+        Rem, // Left % Right
+    }
 
-        public Function(string name, List<Instruction> instructions)
-        {
-            Instructions = instructions;
-        }
+    internal class ModuleDeclaration : IDeclaration
+    {
+        public DeclarationKind DeclarationKind { get; } = DeclarationKind.ModuleDeclaration;
+        public string Name { get; set; }
+        public List<IDeclaration> Symbols { get; set; } = new List<IDeclaration>();
+        public List<IStatement> Statements { get; set; }
+    }
+
+    // var A = B;
+    internal class VariableDeclaration : IStatement, IDeclaration
+    {
+        public StatementKind StatementKind { get; } = StatementKind.VariableDeclaration;
+        public DeclarationKind DeclarationKind { get; } = DeclarationKind.VariableDeclaration;
+
+        public string Name { get; set; }
+        public IExpression Initializer { get; set; }
+    }
+
+    // function A(...B) { C }
+    internal class FunctionDeclaration : IStatement, IDeclaration
+    {
+        public StatementKind StatementKind { get; } = StatementKind.FunctionDeclaration;
+        public DeclarationKind DeclarationKind { get; } = DeclarationKind.FunctionDeclaration;
+
+        public string Name { get; set; }
+        public List<string> Parameters { get; set; }
+        public Block FunctionBlock { get; set; }
+    }
+
+    // A = B;
+    internal class AssignStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.AssignStatement;
+
+        public IExpression Target { get; set; }
+        public IExpression Content { get; set; }
+    }
+
+    // A++;
+    internal class IncrementStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.IncrementStatement;
+
+        public IExpression Target { get; set; }
+    }
+
+    // A--;
+    internal class DecrementStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.DecrementStatement;
+
+        public IExpression Target { get; set; }
+    }
+
+    // if A { B } else { C }
+    internal class IfStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.IfStatement;
+
+        public IExpression Condition { get; set; }
+        public Block ThenBlock { get; set; }
+        public Block ElseBlock { get; set; }
+    }
+
+    // { }
+    internal class Block : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.Block;
+
+        public List<IDeclaration> Symbols { get; set; } = new List<IDeclaration>();
+        public List<IStatement> Statements { get; set; }
+    }
+
+    // A;
+    internal class ExpressionStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.ExpressionStatement;
+
+        public IExpression Content { get; set; }
+    }
+
+    // Value
+    internal class ValueExpression : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.ValueExpression;
+
+        public object Value { get; set; }
+    }
+
+    // Name
+    internal class ReferenceExpression : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.ReferenceExpression;
+
+        public string Name { get; set; }
+        public IDeclaration ResolvedDeclaration { get; set; }
+    }
+
+    // Target[...Indexes]
+    internal class IndexExpression : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.IndexExpression;
+
+        public IExpression Target { get; set; }
+        public List<IExpression> Indexes { get; set; }
+    }
+
+    // Target(...Arguments)
+    internal class CallExpression : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.CallExpression;
+
+        public IExpression Target { get; set; }
+        public List<IExpression> Arguments { get; set; }
+    }
+
+    internal class NotOperator : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.NotOperator;
+
+        public IExpression Left { get; set; }
+    }
+
+    internal class LogicOperator : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.LogicOperator;
+        public LogicOperatorKind LogicOperationKind { get; set; }
+
+        public IExpression Left { get; set; }
+        public IExpression Right { get; set; }
+    }
+
+    internal class MathOperator : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.MathOperator;
+        public MathOperatorKind MathOperationKind { get; set; }
+
+        public IExpression Left { get; set; }
+        public IExpression Right { get; set; }
     }
 }

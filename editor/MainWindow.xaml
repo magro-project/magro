@@ -1,11 +1,13 @@
-﻿<Window x:Class="editor.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:editor"
-        mc:Ignorable="d"
-        Title="magro/editor" Width="960" Height="720">
+﻿<Window
+    x:Class="editor.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:editor"
+    mc:Ignorable="d"
+    Title="magro/editor" Width="960" Height="720"
+>
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
             <Menu>
@@ -44,12 +46,12 @@
                 </Button>
             </ToolBar>
         </StackPanel>
-        <ListBox x:Name="InstListBox"
-                DockPanel.Dock="Bottom"
-                Background="#FF1B1B1B"
-                ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                ScrollViewer.VerticalScrollBarVisibility="Visible"
-                HorizontalContentAlignment="Stretch">
-        </ListBox>
+        <ListBox
+            x:Name="InstListBox"
+            DockPanel.Dock="Bottom"
+            Background="#FF1B1B1B"
+            ScrollViewer.HorizontalScrollBarVisibility="Visible"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            HorizontalContentAlignment="Stretch"/>
     </DockPanel>
 </Window>

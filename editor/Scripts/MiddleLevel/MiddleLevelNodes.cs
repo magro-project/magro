@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace editor
+namespace Magro.Scripts.MiddleLevel
 {
     internal class Module
     {
@@ -42,21 +42,25 @@ namespace editor
 
     internal enum InstructionKind
     {
-        Declare,  // var A = B;              : (string name, Expression expr)
-        Assign,   // A = B;                  : (AssignKind kind, Value target, Expression expr)
-        Inc,      // A++;                    : (Value target)
-        Dec,      // A--;                    : (Value target)
+        Declare,  // var A = B;              : (string name, Expression? expr)
+        Assign,   // A = B;                  : (AssignKind kind, Expression target, Expression expr)
+        Inc,      // A++;                    : (Expression target)
+        Dec,      // A--;                    : (Expression target)
         If,       // if A { B } else { C }   : (Expression expr, List<Instruction> then, List<Instruction> else)
+        Call,     // A(...B)                 : (Expression target, List<Expression> args)
     }
 
     internal enum AssignKind
     {
-        Basic,  // A = B
-        Add,    // A += B
-        Sub,    // A -= B
-        Mul,    // A *= B
-        Div,    // A /= B
+        Basic, // A = B
+        Add,   // A += B
+        Sub,   // A -= B
+        Mul,   // A *= B
+        Div,   // A /= B
+        Rem,   // A %= B
     }
+
+
 
     internal class Expression
     {
@@ -79,40 +83,19 @@ namespace editor
 
     internal enum ExpressionKind
     {
-        Value,     // A      : (Value value)
-        Equal,     // A == B : (Value left, Value right)
-        NotEqual,  // A != B : (Value left, Value right)
-        Add,       // A + B  : (Value left, Value right)
-        Sub,       // A - B  : (Value left, Value right)
-        Mul,       // A * B  : (Value left, Value right)
-        Div,       // A / B  : (Value left, Value right)
+        ImmediateValue, // (object value) : A
+        VariableRef,    // (string name) : A
+        Index,          // (Expression target, List<Expression> indexes) : A[...B]
+        Equal,          // (Expression left, Expression right) : A == B
+        NotEqual,       // (Expression left, Expression right) : A != B
+        Add,            // (Expression left, Expression right) : A + B
+        Sub,            // (Expression left, Expression right) : A - B
+        Mul,            // (Expression left, Expression right) : A * B
+        Div,            // (Expression left, Expression right) : A / B
+        Rem,            // (Expression left, Expression right) : A % B
     }
 
-    internal class Value
-    {
-        public ValueKind Kind { get; set; }
 
-        public List<object> Children { get; set; }
-
-        public Value(ValueKind kind)
-        {
-            Kind = kind;
-            Children = new List<object>();
-        }
-
-        public Value(ValueKind kind, List<object> children)
-        {
-            Kind = kind;
-            Children = children;
-        }
-    }
-
-    internal enum ValueKind
-    {
-        Immediate, // A       : (object value)
-        Variable,  // A       : (string name)
-        Index,     // A[...B] : (Value target, List<Value> indexes)
-    }
 
     internal class Function
     {

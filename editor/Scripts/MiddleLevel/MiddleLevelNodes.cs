@@ -10,6 +10,7 @@ namespace Magro.Scripts.MiddleLevel
     internal interface IDeclaration
     {
         DeclarationKind DeclarationKind { get; }
+
         string Name { get; set; }
     }
 
@@ -66,8 +67,9 @@ namespace Magro.Scripts.MiddleLevel
     internal class ModuleDeclaration : IDeclaration
     {
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.ModuleDeclaration;
+
         public string Name { get; set; }
-        public List<IDeclaration> Symbols { get; set; } = new List<IDeclaration>();
+        public List<IDeclaration> Declarations { get; set; } = new List<IDeclaration>();
         public List<IStatement> Statements { get; set; }
     }
 
@@ -132,7 +134,7 @@ namespace Magro.Scripts.MiddleLevel
     {
         public StatementKind StatementKind { get; } = StatementKind.Block;
 
-        public List<IDeclaration> Symbols { get; set; } = new List<IDeclaration>();
+        public List<IDeclaration> Declarations { get; set; } = new List<IDeclaration>();
         public List<IStatement> Statements { get; set; }
     }
 

@@ -64,6 +64,14 @@ namespace Magro.Scripts.MiddleLevel
         Rem, // Left % Right
     }
 
+    internal enum ValueKind
+    {
+        Number,
+        String,
+        Boolean,
+        Object,
+    }
+
     internal class ModuleDeclaration : IDeclaration
     {
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.ModuleDeclaration;
@@ -143,13 +151,14 @@ namespace Magro.Scripts.MiddleLevel
     {
         public StatementKind StatementKind { get; } = StatementKind.ExpressionStatement;
 
-        public IExpression Content { get; set; }
+        public IExpression Expression { get; set; }
     }
 
     // Value
     internal class ValueExpression : IExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.ValueExpression;
+        public ValueKind ValueKind { get; set; }
 
         public object Value { get; set; }
     }

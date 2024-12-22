@@ -23,23 +23,23 @@ namespace Magro.Scripts.SyakeScript
 
         public TokenKind GetTokenKind()
         {
-            return GetToken().TokenKind;
+            return Tokens[0].TokenKind;
         }
 
         public object GetTokenContent()
         {
-            return GetToken().Content;
+            return Tokens[0].Content;
         }
 
         public bool Is(TokenKind kind)
         {
-            return (GetToken().TokenKind == kind);
+            return (Tokens[0].TokenKind == kind);
         }
 
         public bool Is(string word)
         {
-            if (GetToken().TokenKind != TokenKind.Word) return false;
-            var actualWord = (string)GetToken().Content;
+            if (Tokens[0].TokenKind != TokenKind.Word) return false;
+            var actualWord = (string)Tokens[0].Content;
             return actualWord == word;
         }
 
@@ -47,8 +47,8 @@ namespace Magro.Scripts.SyakeScript
         {
             if (!Is(kind))
             {
-                var token = GetToken();
-                throw new ApplicationException($"Token '{token.TokenKind}' is unexpected ({token.BeginLocation} - {token.EndLocation})");
+                var token = Tokens[0];
+                throw new ApplicationException($"Unexpected token '{token.TokenKind}' ({token.BeginLocation} - {token.EndLocation})");
             }
         }
 
@@ -56,8 +56,8 @@ namespace Magro.Scripts.SyakeScript
         {
             if (!Is(word))
             {
-                var token = GetToken();
-                throw new ApplicationException($"Token '{token.TokenKind}' is unexpected ({token.BeginLocation} - {token.EndLocation})");
+                var token = Tokens[0];
+                throw new ApplicationException($"Unexpected token '{token.TokenKind}' ({token.BeginLocation} - {token.EndLocation})");
             }
         }
 

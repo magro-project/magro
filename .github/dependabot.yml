@@ -6,7 +6,17 @@
 version: 2
 updates:
   - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/editor" # Location of package manifests
+    directory: "/Magro" # Location of package manifests
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "nuget" # See documentation for possible values
+    directory: "/Magro.Common" # Location of package manifests
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "nuget" # See documentation for possible values
+    directory: "/Magro.Scripts.Syake" # Location of package manifests
     schedule:
       interval: "weekly"
 

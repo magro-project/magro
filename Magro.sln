@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35004.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magro", "Magro\Magro.csproj", "{762317C8-ED07-4AA7-9D61-1885A1BD3669}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magro.Common", "Magro.Common\Magro.Common.csproj", "{8A8527CF-4F0C-41FF-8B16-0BCFF7CAF72F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magro.Syake", "Magro.Syake\Magro.Syake.csproj", "{E0E07C8E-9D30-4F6A-B1FF-975E20B40B3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{762317C8-ED07-4AA7-9D61-1885A1BD3669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{762317C8-ED07-4AA7-9D61-1885A1BD3669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{762317C8-ED07-4AA7-9D61-1885A1BD3669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{762317C8-ED07-4AA7-9D61-1885A1BD3669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A8527CF-4F0C-41FF-8B16-0BCFF7CAF72F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A8527CF-4F0C-41FF-8B16-0BCFF7CAF72F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A8527CF-4F0C-41FF-8B16-0BCFF7CAF72F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A8527CF-4F0C-41FF-8B16-0BCFF7CAF72F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0E07C8E-9D30-4F6A-B1FF-975E20B40B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0E07C8E-9D30-4F6A-B1FF-975E20B40B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0E07C8E-9D30-4F6A-B1FF-975E20B40B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0E07C8E-9D30-4F6A-B1FF-975E20B40B3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {57638A25-CD50-4448-B840-FEAC8A4DC9EC}
+	EndGlobalSection
+EndGlobal

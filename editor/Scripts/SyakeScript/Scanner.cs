@@ -145,7 +145,7 @@ namespace Magro.Scripts.SyakeScript
 
                     case '!':
                         Stream.Next();
-                        return new Token(TokenKind.Exclamation, begin, Stream.GetLocation());
+                        return new Token(TokenKind.Not, begin, Stream.GetLocation());
 
                     case '+':
                         Stream.Next();

@@ -1,68 +1,11 @@
 ﻿using Magro.Scripts.MiddleLevel;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
-namespace Magro.Scripts.SyakeScript
+namespace Magro.Scripts.SyakeScript.Parsing
 {
-    internal class Parser
+    internal partial class Parser
     {
-        public Parser()
-        {
-
-        }
-
-        public void Parse()
-        {
-            var reader = new StreamReader("script.ss");
-            var scan = new Scanner(reader);
-            ParseStatement(scan);
-        }
-
-        public IDeclaration ParseDeclaration(Scanner scan)
-        {
-            if (scan.Is("function"))
-            {
-                scan.Next();
-                scan.Expect(TokenKind.Word);
-                var name = (string)scan.GetTokenContent();
-
-                var parameters = ParseParameters(scan);
-                var block = ParseBlock(scan);
-
-                return new FunctionDeclaration()
-                {
-                    Name = name,
-                    Parameters = parameters,
-                    FunctionBlock = block,
-                };
-            }
-
-            if (scan.Is("var"))
-            {
-                scan.Next();
-                scan.Expect(TokenKind.Word);
-                var name = (string)scan.GetTokenContent();
-
-                IExpression initializer = null;
-                if (scan.Is(TokenKind.Equal))
-                {
-                    scan.Next();
-                    initializer = ParseExpression(scan);
-                }
-
-                scan.Expect(TokenKind.SemiCollon);
-
-                return new VariableDeclaration()
-                {
-                    Name = name,
-                    Initializer = initializer,
-                };
-            }
-
-            throw new ApplicationException("Unexpected token");
-        }
-
         public IStatement ParseStatement(Scanner scan)
         {
             if (scan.Is("if"))
@@ -165,42 +108,6 @@ namespace Magro.Scripts.SyakeScript
             }
 
             throw new ApplicationException("Unexpected token");
-        }
-
-        public Block ParseBlock(Scanner scan)
-        {
-            scan.Expect(TokenKind.OpenBrace);
-
-            var statements = new List<IStatement>();
-
-            // TODO
-
-            // ParseStatement(scan);
-
-            scan.Expect(TokenKind.CloseBrace);
-
-            return new Block()
-            {
-                Statements = statements,
-            };
-        }
-
-        public List<string> ParseParameters(Scanner scan)
-        {
-            scan.Expect(TokenKind.OpenParen);
-
-            var parameters = new List<string>();
-
-            // TODO
-
-            scan.Expect(TokenKind.CloseParen);
-
-            return parameters;
-        }
-
-        public IExpression ParseExpression(Scanner scan)
-        {
-            throw new NotImplementedException();
         }
     }
 }

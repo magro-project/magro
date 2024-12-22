@@ -72,11 +72,14 @@
     </ApplicationDefinition>
     <Compile Include="Scripts\SyakeScript\CharStream.cs" />
     <Compile Include="Scripts\SyakeScript\Location.cs" />
+    <Compile Include="Scripts\SyakeScript\Parsing\Declaration.cs" />
+    <Compile Include="Scripts\SyakeScript\Parsing\Expression.cs" />
+    <Compile Include="Scripts\SyakeScript\Parsing\Statement.cs" />
     <Compile Include="Scripts\SyakeScript\SyntaxNodes.cs" />
     <Compile Include="Scripts\LowLevel\LowLevelNodes.cs" />
     <Compile Include="Scripts\IkuraScript\SemanticNodes.cs" />
     <Compile Include="Scripts\MiddleLevel\MiddleLevelNodes.cs" />
-    <Compile Include="Scripts\SyakeScript\Parser.cs" />
+    <Compile Include="Scripts\SyakeScript\Parsing\Parser.cs" />
     <Compile Include="Scripts\SyakeScript\Scanner.cs" />
     <Compile Include="Scripts\SyakeScript\Token.cs" />
     <Compile Include="VersionWindow.xaml.cs">

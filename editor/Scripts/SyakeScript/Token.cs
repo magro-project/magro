@@ -85,12 +85,12 @@
         /// <summary>
         /// "!="
         /// </summary>
-        ExclamationEqual,
+        NotEqual,
 
         /// <summary>
         /// "!"
         /// </summary>
-        Exclamation,
+        Not,
 
         /// <summary>
         /// "+"

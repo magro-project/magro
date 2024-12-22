@@ -1,4 +1,4 @@
-﻿namespace editor.Scripts.SyakeScript
+﻿namespace Magro.Scripts.SyakeScript
 {
     internal class Token
     {
@@ -66,6 +66,11 @@
         /// "."
         /// </summary>
         Dot,
+
+        /// <summary>
+        /// ";"
+        /// </summary>
+        SemiCollon,
 
         /// <summary>
         /// "="

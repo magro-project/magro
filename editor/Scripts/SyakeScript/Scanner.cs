@@ -1,6 +1,7 @@
-﻿using editor.Scripts.SyakeScript;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
 using System.IO;
+using System.Text;
 
 namespace Magro.Scripts.SyakeScript
 {
@@ -9,15 +10,55 @@ namespace Magro.Scripts.SyakeScript
         private CharStream Stream;
         private List<Token> Tokens = new List<Token>();
 
-        public Token CurrentToken
-        {
-            get => Tokens[0];
-        }
-
         public Scanner(StreamReader reader)
         {
             Stream = new CharStream(reader);
             Tokens.Add(ReadOne());
+        }
+
+        public Token GetToken()
+        {
+            return Tokens[0];
+        }
+
+        public TokenKind GetTokenKind()
+        {
+            return GetToken().TokenKind;
+        }
+
+        public object GetTokenContent()
+        {
+            return GetToken().Content;
+        }
+
+        public bool Is(TokenKind kind)
+        {
+            return (GetToken().TokenKind == kind);
+        }
+
+        public bool Is(string word)
+        {
+            if (GetToken().TokenKind != TokenKind.Word) return false;
+            var actualWord = (string)GetToken().Content;
+            return actualWord == word;
+        }
+
+        public void Expect(TokenKind kind)
+        {
+            if (!Is(kind))
+            {
+                var token = GetToken();
+                throw new ApplicationException($"Token '{token.TokenKind}' is unexpected ({token.BeginLocation} - {token.EndLocation})");
+            }
+        }
+
+        public void Expect(string word)
+        {
+            if (!Is(word))
+            {
+                var token = GetToken();
+                throw new ApplicationException($"Token '{token.TokenKind}' is unexpected ({token.BeginLocation} - {token.EndLocation})");
+            }
         }
 
         public void Next()
@@ -49,16 +90,20 @@ namespace Magro.Scripts.SyakeScript
         {
             while (true)
             {
-                var begin = Stream.GetLocation();
-
                 if (Stream.EndOfStream)
                 {
-                    return new Token(TokenKind.EOF, begin, Stream.GetLocation());
+                    var location = Stream.GetLocation();
+                    return new Token(TokenKind.EOF, location, location);
                 }
 
-                // TODO: spacing
+                // skip spacing
+                if (IsSpacingChar(Stream.CurrentChar))
+                {
+                    Stream.Next();
+                    continue;
+                }
 
-                begin = Stream.GetLocation();
+                var begin = Stream.GetLocation();
 
                 switch (Stream.CurrentChar)
                 {
@@ -123,11 +168,148 @@ namespace Magro.Scripts.SyakeScript
                         return new Token(TokenKind.Percent, begin, Stream.GetLocation());
                 }
 
-                // TODO: number
+                Token token;
 
-                // TODO: word
-                
+                if (TryReadNumber(out token))
+                {
+                    return token;
+                }
+
+                if (TryReadWord(out token))
+                {
+                    return token;
+                }
+
+                throw new ApplicationException($"Invalid character ({begin})");
             }
+        }
+
+        private bool TryReadNumber(out Token token)
+        {
+            token = null;
+
+            var buf = new StringBuilder();
+            var begin = Stream.GetLocation();
+
+            while (!Stream.EndOfStream)
+            {
+                var first = (buf.Length == 0);
+                if (!IsNumberChar(Stream.CurrentChar, first)) break;
+                buf.Append(Stream.CurrentChar);
+                Stream.Next();
+            }
+
+            if (!Stream.EndOfStream && Stream.CurrentChar == '.')
+            {
+                var buf2 = new StringBuilder();
+                buf2.Append(Stream.CurrentChar);
+                Stream.Next();
+
+                var numberLocation2 = Stream.GetLocation();
+
+                while (!Stream.EndOfStream)
+                {
+                    var first = (buf2.Length == 0);
+                    if (!IsNumberChar(Stream.CurrentChar, first)) break;
+                    buf2.Append(Stream.CurrentChar);
+                    Stream.Next();
+                }
+
+                if (buf2.Length > 0)
+                {
+                    buf.Append(buf2.ToString());
+                }
+                else
+                {
+                    throw new ApplicationException($"Number expected. ({numberLocation2})");
+                }
+            }
+
+            if (buf.Length > 0)
+            {
+                buf.ToString();
+                token = new Token(TokenKind.Number, begin, Stream.GetLocation())
+                {
+                    Content = buf.ToString()
+                };
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool TryReadWord(out Token token)
+        {
+            token = null;
+
+            var buf = new StringBuilder();
+            var begin = Stream.GetLocation();
+
+            while (!Stream.EndOfStream)
+            {
+                if (!IsIdentifierChar(Stream.CurrentChar)) break;
+                buf.Append(Stream.CurrentChar);
+                Stream.Next();
+            }
+
+            if (buf.Length > 0)
+            {
+                token = new Token(TokenKind.Word, begin, Stream.GetLocation())
+                {
+                    Content = buf.ToString()
+                };
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool IsNumberChar(char? ch, bool first)
+        {
+            if (ch == null) return false;
+
+            var code = (int)ch;
+
+            if (!first && code == 0x30) return true;
+            if (code >= 0x31 && code <= 0x39) return true;
+
+            return false;
+        }
+
+        private bool IsIdentifierChar(char? ch)
+        {
+            if (ch == null) return false;
+
+            var code = (int)ch;
+
+            if (code >= 0x30 && code <= 0x39) return true;
+            if (code >= 0x41 && code <= 0x5A) return true;
+            if (code == 0x5F) return true;
+            if (code >= 0x61 && code <= 0x7A) return true;
+
+            return false;
+        }
+
+        private bool IsSpacingChar(char? ch)
+        {
+            if (ch == null) return false;
+
+            var code = (int)ch;
+
+            // tab
+            if (code == 0x09) return true;
+            // LF
+            if (code == 0x0A) return true;
+            // CR
+            if (code == 0x0D) return true;
+            // space
+            if (code == 0x20) return true;
+
+            return false;
         }
     }
 }

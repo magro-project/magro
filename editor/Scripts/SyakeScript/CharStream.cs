@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace editor.Scripts.SyakeScript
+namespace Magro.Scripts.SyakeScript
 {
     internal class CharStream
     {

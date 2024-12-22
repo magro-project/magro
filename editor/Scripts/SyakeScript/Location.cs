@@ -1,4 +1,4 @@
-﻿namespace editor.Scripts.SyakeScript
+﻿namespace Magro.Scripts.SyakeScript
 {
     internal class Location
     {
@@ -9,6 +9,11 @@
         {
             Line = line;
             Column = column;
+        }
+
+        public override string ToString()
+        {
+            return $"{Line}:{Column}";
         }
     }
 }

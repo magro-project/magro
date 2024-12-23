@@ -8,6 +8,45 @@ namespace Magro.Syake.Parsing
     {
         public IStatement ParseStatement(Scanner scan)
         {
+            if (scan.Is("function"))
+            {
+                scan.Next();
+                scan.Expect(TokenKind.Word);
+                var name = (string)scan.GetTokenContent();
+
+                var parameters = ParseParameters(scan);
+                var block = ParseBlock(scan);
+
+                return new FunctionDeclaration()
+                {
+                    Name = name,
+                    Parameters = parameters,
+                    FunctionBlock = block,
+                };
+            }
+
+            if (scan.Is("var"))
+            {
+                scan.Next();
+                scan.Expect(TokenKind.Word);
+                var name = (string)scan.GetTokenContent();
+
+                IExpression initializer = null;
+                if (scan.Is(TokenKind.Equal))
+                {
+                    scan.Next();
+                    initializer = ParseExpression(scan);
+                }
+
+                scan.Expect(TokenKind.SemiCollon);
+
+                return new VariableDeclaration()
+                {
+                    Name = name,
+                    Initializer = initializer,
+                };
+            }
+
             if (scan.Is("if"))
             {
                 scan.Next();
@@ -108,6 +147,46 @@ namespace Magro.Syake.Parsing
             }
 
             throw new ApplicationException("Unexpected token");
+        }
+
+        public List<string> ParseParameters(Scanner scan)
+        {
+            scan.Expect(TokenKind.OpenParen);
+
+            var parameters = new List<string>();
+
+            while (!scan.Is(TokenKind.CloseParen))
+            {
+                scan.Expect(TokenKind.Word);
+                parameters.Add((string)scan.GetTokenContent());
+
+                if (scan.Is(TokenKind.Comma))
+                {
+                    scan.Next();
+                }
+            }
+
+            scan.Expect(TokenKind.CloseParen);
+
+            return parameters;
+        }
+
+        public Block ParseBlock(Scanner scan)
+        {
+            scan.Expect(TokenKind.OpenBrace);
+
+            var statements = new List<IStatement>();
+            while (!scan.Is(TokenKind.CloseBrace))
+            {
+                statements.Add(ParseStatement(scan));
+            }
+
+            scan.Expect(TokenKind.CloseBrace);
+
+            return new Block()
+            {
+                Statements = statements,
+            };
         }
     }
 }

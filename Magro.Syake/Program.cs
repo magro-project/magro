@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Magro.Syake.Parsing;
+using System;
+using System.IO;
 
 namespace Magro.Syake
 {
@@ -8,6 +9,9 @@ namespace Magro.Syake
         static void Main(string[] args)
         {
             Console.WriteLine("SyakeScript Compiler");
+            var parser = new Parser();
+            var reader = new StreamReader("main.ss");
+            var module = parser.Parse("main", reader);
         }
     }
 }

@@ -6,6 +6,11 @@ namespace Magro.Syake.Parsing
 {
     internal partial class Parser
     {
+        public IExpression ParseExpression(Scanner scan)
+        {
+            return ParsePratt(scan, 0);
+        }
+
         public List<IOperator> Operators = new List<IOperator>()
         {
             new PostfixOperator(TokenKind.OpenParen,    45),
@@ -36,11 +41,6 @@ namespace Magro.Syake.Parsing
 
 //          new InfixOperator(TokenKind.Or2,             5,  6),
         };
-
-        public IExpression ParseExpression(Scanner scan)
-        {
-            return ParsePratt(scan, 0);
-        }
 
         private IExpression ParsePratt(Scanner scan, int minimumBindPower)
         {

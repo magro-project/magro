@@ -13,6 +13,49 @@
             BeginLocation = beginLocation;
             EndLocation = endLocation;
         }
+
+        public override string ToString()
+        {
+            switch (TokenKind)
+            {
+                case TokenKind.EOF: return "EOF";
+                case TokenKind.OpenBracket: return "'['";
+                case TokenKind.CloseBracket: return "']'";
+                case TokenKind.OpenBrace: return "'{'";
+                case TokenKind.CloseBrace: return "'}'";
+                case TokenKind.OpenParen: return "'('";
+                case TokenKind.CloseParen: return "')'";
+                case TokenKind.Comma: return "','";
+                case TokenKind.Dot: return "'.'";
+                case TokenKind.SemiCollon: return "';'";
+                case TokenKind.Equal: return "'='";
+                case TokenKind.Equal2: return "'=='";
+                case TokenKind.NotEqual: return "'!='";
+                case TokenKind.Not: return "'!'";
+                case TokenKind.Plus: return "'+'";
+                case TokenKind.Plus2: return "'++'";
+                case TokenKind.Minus: return "'-'";
+                case TokenKind.Minus2: return "'--'";
+                case TokenKind.Astarisk: return "'*'";
+                case TokenKind.Slash: return "'/'";
+                case TokenKind.Percent: return "'%'";
+            }
+
+            if (TokenKind == TokenKind.Word)
+            {
+                var content = (string)Content;
+                return "'" + content + "'";
+            }
+
+            if (TokenKind == TokenKind.Number)
+            {
+                var content = (double)Content;
+
+                return content.ToString();
+            }
+
+            throw new System.Exception("Invalid token");
+        }
     }
 
     internal enum TokenKind

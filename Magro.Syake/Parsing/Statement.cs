@@ -146,7 +146,7 @@ namespace Magro.Syake.Parsing
                 };
             }
 
-            throw new ApplicationException("Unexpected token");
+            throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         public List<string> ParseParameters(Scanner scan)

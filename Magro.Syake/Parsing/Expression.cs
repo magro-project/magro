@@ -99,22 +99,22 @@ namespace Magro.Syake.Parsing
 
         private IExpression ParseAtom(Scanner scan)
         {
-            throw new NotImplementedException();
+            throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         private IExpression ParsePrefix(Scanner scan, int minimumBindPower)
         {
-            throw new NotImplementedException();
+            throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         private IExpression ParseInfix(Scanner scan, IExpression left, int minimumBindPower)
         {
-            throw new NotImplementedException();
+            throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         private IExpression ParsePostfix(Scanner scan, IExpression expr)
         {
-            throw new NotImplementedException();
+            throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
     }
 

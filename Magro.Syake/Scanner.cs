@@ -48,7 +48,7 @@ namespace Magro.Syake
             if (!Is(kind))
             {
                 var token = Tokens[0];
-                throw new ApplicationException($"Unexpected token '{token.TokenKind}' ({token.BeginLocation} - {token.EndLocation})");
+                throw new ApplicationException($"Unexpected token {token} ({token.BeginLocation} - {token.EndLocation})");
             }
         }
 
@@ -57,7 +57,7 @@ namespace Magro.Syake
             if (!Is(word))
             {
                 var token = Tokens[0];
-                throw new ApplicationException($"Unexpected token '{token.TokenKind}' ({token.BeginLocation} - {token.EndLocation})");
+                throw new ApplicationException($"Unexpected token {token} ({token.BeginLocation} - {token.EndLocation})");
             }
         }
 

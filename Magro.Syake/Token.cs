@@ -31,6 +31,10 @@
                 case TokenKind.Equal: return "'='";
                 case TokenKind.Equal2: return "'=='";
                 case TokenKind.NotEqual: return "'!='";
+                case TokenKind.Gt: return "'>'";
+                case TokenKind.GtEq: return "'>='";
+                case TokenKind.Lt: return "'<'";
+                case TokenKind.LtEq: return "'<='";
                 case TokenKind.Not: return "'!'";
                 case TokenKind.Plus: return "'+'";
                 case TokenKind.Plus2: return "'++'";
@@ -39,6 +43,8 @@
                 case TokenKind.Astarisk: return "'*'";
                 case TokenKind.Slash: return "'/'";
                 case TokenKind.Percent: return "'%'";
+                case TokenKind.And2: return "'&&'";
+                case TokenKind.Or2: return "'||'";
             }
 
             if (TokenKind == TokenKind.Word)
@@ -49,9 +55,9 @@
 
             if (TokenKind == TokenKind.Number)
             {
-                var content = (double)Content;
+                var content = (string)Content;
 
-                return content.ToString();
+                return content;
             }
 
             throw new System.Exception("Invalid token");
@@ -131,6 +137,26 @@
         NotEqual,
 
         /// <summary>
+        /// ">"
+        /// </summary>
+        Gt,
+
+        /// <summary>
+        /// ">="
+        /// </summary>
+        GtEq,
+
+        /// <summary>
+        /// "<"
+        /// </summary>
+        Lt,
+
+        /// <summary>
+        /// "<="
+        /// </summary>
+        LtEq,
+
+        /// <summary>
         /// "!"
         /// </summary>
         Not,
@@ -169,5 +195,15 @@
         /// "%"
         /// </summary>
         Percent,
+
+        /// <summary>
+        /// &&
+        /// </summary>
+        And2,
+
+        /// <summary>
+        /// ||
+        /// </summary>
+        Or2,
     }
 }

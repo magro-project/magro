@@ -139,9 +139,24 @@ namespace Magro.Syake
                         Stream.Next();
                         return new Token(TokenKind.Dot, begin, Stream.GetLocation());
 
+                    case ';':
+                        Stream.Next();
+                        return new Token(TokenKind.SemiCollon, begin, Stream.GetLocation());
+
                     case '=':
                         Stream.Next();
+                        // TODO: ==
                         return new Token(TokenKind.Equal, begin, Stream.GetLocation());
+
+                    case '>':
+                        Stream.Next();
+                        // TODO: >=
+                        return new Token(TokenKind.Gt, begin, Stream.GetLocation());
+
+                    case '<':
+                        Stream.Next();
+                        // TODO: <=
+                        return new Token(TokenKind.Lt, begin, Stream.GetLocation());
 
                     case '!':
                         Stream.Next();
@@ -149,10 +164,12 @@ namespace Magro.Syake
 
                     case '+':
                         Stream.Next();
+                        // TODO: ++
                         return new Token(TokenKind.Plus, begin, Stream.GetLocation());
 
                     case '-':
                         Stream.Next();
+                        // TODO: --
                         return new Token(TokenKind.Minus, begin, Stream.GetLocation());
 
                     case '*':
@@ -166,6 +183,16 @@ namespace Magro.Syake
                     case '%':
                         Stream.Next();
                         return new Token(TokenKind.Percent, begin, Stream.GetLocation());
+
+                    case '&':
+                        Stream.Next();
+                        // TODO
+                        return new Token(TokenKind.And2, begin, Stream.GetLocation());
+
+                    case '|':
+                        Stream.Next();
+                        // TODO
+                        return new Token(TokenKind.Or2, begin, Stream.GetLocation());
                 }
 
                 Token token;

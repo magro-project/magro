@@ -13,7 +13,7 @@ namespace Magro.Syake.Parsing
                 scan.Next();
                 scan.Expect(TokenKind.Word);
                 var name = (string)scan.GetTokenContent();
-
+                scan.Next();
                 var parameters = ParseParameters(scan);
                 var block = ParseBlock(scan);
 
@@ -30,6 +30,7 @@ namespace Magro.Syake.Parsing
                 scan.Next();
                 scan.Expect(TokenKind.Word);
                 var name = (string)scan.GetTokenContent();
+                scan.Next();
 
                 IExpression initializer = null;
                 if (scan.Is(TokenKind.Equal))
@@ -39,6 +40,7 @@ namespace Magro.Syake.Parsing
                 }
 
                 scan.Expect(TokenKind.SemiCollon);
+                scan.Next();
 
                 return new VariableDeclaration()
                 {
@@ -51,8 +53,10 @@ namespace Magro.Syake.Parsing
             {
                 scan.Next();
                 scan.Expect(TokenKind.OpenParen);
+                scan.Next();
                 var condition = ParseExpression(scan);
                 scan.Expect(TokenKind.CloseParen);
+                scan.Next();
 
                 Block thenBlock;
                 if (scan.Is(TokenKind.OpenBrace))
@@ -114,6 +118,7 @@ namespace Magro.Syake.Parsing
                 scan.Next();
                 var right = ParseExpression(scan);
                 scan.Expect(TokenKind.SemiCollon);
+                scan.Next();
 
                 return new AssignStatement()
                 {
@@ -127,6 +132,7 @@ namespace Magro.Syake.Parsing
             {
                 scan.Next();
                 scan.Expect(TokenKind.SemiCollon);
+                scan.Next();
 
                 return new IncrementStatement()
                 {
@@ -139,6 +145,7 @@ namespace Magro.Syake.Parsing
             {
                 scan.Next();
                 scan.Expect(TokenKind.SemiCollon);
+                scan.Next();
 
                 return new DecrementStatement()
                 {
@@ -152,6 +159,7 @@ namespace Magro.Syake.Parsing
         public List<string> ParseParameters(Scanner scan)
         {
             scan.Expect(TokenKind.OpenParen);
+            scan.Next();
 
             var parameters = new List<string>();
 
@@ -159,6 +167,7 @@ namespace Magro.Syake.Parsing
             {
                 scan.Expect(TokenKind.Word);
                 parameters.Add((string)scan.GetTokenContent());
+                scan.Next();
 
                 if (scan.Is(TokenKind.Comma))
                 {
@@ -167,6 +176,7 @@ namespace Magro.Syake.Parsing
             }
 
             scan.Expect(TokenKind.CloseParen);
+            scan.Next();
 
             return parameters;
         }
@@ -174,6 +184,7 @@ namespace Magro.Syake.Parsing
         public Block ParseBlock(Scanner scan)
         {
             scan.Expect(TokenKind.OpenBrace);
+            scan.Next();
 
             var statements = new List<IStatement>();
             while (!scan.Is(TokenKind.CloseBrace))
@@ -182,6 +193,7 @@ namespace Magro.Syake.Parsing
             }
 
             scan.Expect(TokenKind.CloseBrace);
+            scan.Next();
 
             return new Block()
             {

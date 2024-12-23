@@ -29,17 +29,17 @@ namespace Magro.Syake.Parsing
             new InfixOperator(TokenKind.Plus,           25, 26),
             new InfixOperator(TokenKind.Minus,          25, 26),
 
-//          new InfixOperator(TokenKind.Lt,             20, 21),
-//          new InfixOperator(TokenKind.LtEq,           20, 21),
-//          new InfixOperator(TokenKind.Gt,             20, 21),
-//          new InfixOperator(TokenKind.GtEq,           20, 21),
+            new InfixOperator(TokenKind.Lt,             20, 21),
+            new InfixOperator(TokenKind.LtEq,           20, 21),
+            new InfixOperator(TokenKind.Gt,             20, 21),
+            new InfixOperator(TokenKind.GtEq,           20, 21),
 
             new InfixOperator(TokenKind.Equal2,         15, 16),
             new InfixOperator(TokenKind.NotEqual,       15, 16),
 
-//          new InfixOperator(TokenKind.And2,           10, 11),
+            new InfixOperator(TokenKind.And2,           10, 11),
 
-//          new InfixOperator(TokenKind.Or2,             5,  6),
+            new InfixOperator(TokenKind.Or2,             5,  6),
         };
 
         private IExpression ParsePratt(Scanner scan, int minimumBindPower)
@@ -99,21 +99,29 @@ namespace Magro.Syake.Parsing
 
         private IExpression ParseAtom(Scanner scan)
         {
+            // TODO
+
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         private IExpression ParsePrefix(Scanner scan, int minimumBindPower)
         {
+            // TODO
+
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         private IExpression ParseInfix(Scanner scan, IExpression left, int minimumBindPower)
         {
+            // TODO
+
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         private IExpression ParsePostfix(Scanner scan, IExpression expr)
         {
+            // TODO
+
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
     }

@@ -45,23 +45,34 @@ namespace Magro.Common.MiddleLevel
         IndexExpression,
         CallExpression,
         NotOperator,
+        RelationalOperator,
         LogicOperator,
         MathOperator,
     }
 
-    public enum LogicOperatorKind
+    public enum RelationalOperatorKind
     {
         Equal,      // Left == Right
         NotEqual,   // Left != Right
+        Gt,         // Left > Right
+        Lt,         // Left < Right
+        GtEq,       // Left >= Right
+        LtEq,       // Left <= Right
+    }
+
+    public enum LogicOperatorKind
+    {
+        And,    // Left && Right
+        Or,     // Left || Right
     }
 
     public enum MathOperatorKind
     {
-        Add, // Left + Right
-        Sub, // Left - Right
-        Mul, // Left * Right
-        Div, // Left / Right
-        Rem, // Left % Right
+        Add,    // Left + Right
+        Sub,    // Left - Right
+        Mul,    // Left * Right
+        Div,    // Left / Right
+        Rem,    // Left % Right
     }
 
     public enum ValueKind
@@ -201,6 +212,15 @@ namespace Magro.Common.MiddleLevel
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.NotOperator;
 
         public IExpression Left { get; set; }
+    }
+
+    public class RelationalOperator : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.RelationalOperator;
+
+        public RelationalOperatorKind RelationalOperatorKind { get; set; }
+        public IExpression Left { get; set; }
+        public IExpression Right { get; set; }
     }
 
     public class LogicOperator : IExpression

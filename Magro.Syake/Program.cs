@@ -10,7 +10,7 @@ namespace Magro.Syake
         {
             Console.WriteLine("SyakeScript Compiler");
             var parser = new Parser();
-            var reader = new StreamReader("main.ss");
+            var reader = new StreamReader("../../main.ss");
             var module = parser.Parse("main", reader);
         }
     }

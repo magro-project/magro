@@ -56,8 +56,7 @@
             if (TokenKind == TokenKind.Number)
             {
                 var content = (string)Content;
-
-                return content;
+                return "'" + content + "'";
             }
 
             throw new System.Exception("Invalid token");

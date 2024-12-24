@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace Magro.Syake.Parsing
+namespace Magro.Syake.Syntax
 {
     internal partial class Parser
     {
-        public IStatement ParseStatement(Scanner scan)
+        public List<IStatement> ParseStatement(Scanner scan)
         {
             if (scan.Is("function"))
             {
@@ -17,36 +17,56 @@ namespace Magro.Syake.Parsing
                 var parameters = ParseParameters(scan);
                 var block = ParseBlock(scan);
 
-                return new FunctionDeclaration()
+                return new List<IStatement>()
                 {
-                    Name = name,
-                    Parameters = parameters,
-                    FunctionBlock = block,
+                    new FunctionDeclaration()
+                    {
+                        Name = name,
+                        Parameters = parameters,
+                        FunctionBlock = block,
+                    }
                 };
             }
 
             if (scan.Is("var"))
             {
                 scan.Next();
-                scan.Expect(TokenKind.Word);
-                var name = scan.GetTokenContent();
-                scan.Next();
 
-                IExpression initializer = null;
-                if (scan.Is(TokenKind.Equal))
+                var statements = new List<IStatement>();
+                while (true)
                 {
+                    scan.Expect(TokenKind.Word);
+                    var name = scan.GetTokenContent();
                     scan.Next();
-                    initializer = ParseExpression(scan);
+
+                    IExpression initializer = null;
+                    if (scan.Is(TokenKind.Equal))
+                    {
+                        scan.Next();
+                        initializer = ParseExpression(scan);
+                    }
+
+                    statements.Add(new VariableDeclaration()
+                    {
+                        Name = name,
+                        Initializer = initializer,
+                    });
+
+                    // 「,」で区切って複数の変数を宣言できる
+                    if (scan.Is(TokenKind.Comma))
+                    {
+                        scan.Next();
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 scan.Expect(TokenKind.SemiCollon);
                 scan.Next();
 
-                return new VariableDeclaration()
-                {
-                    Name = name,
-                    Initializer = initializer,
-                };
+                return statements;
             }
 
             if (scan.Is("if"))
@@ -65,10 +85,10 @@ namespace Magro.Syake.Parsing
                 }
                 else
                 {
-                    var statement = ParseStatement(scan);
+                    var statements = ParseStatement(scan);
                     thenBlock = new Block()
                     {
-                        Statements = new List<IStatement>() { statement },
+                        Statements = statements,
                     };
                 }
 
@@ -83,19 +103,22 @@ namespace Magro.Syake.Parsing
                     }
                     else
                     {
-                        var statement = ParseStatement(scan);
+                        var statements = ParseStatement(scan);
                         elseBlock = new Block()
                         {
-                            Statements = new List<IStatement>() { statement },
+                            Statements = statements,
                         };
                     }
                 }
 
-                return new IfStatement()
+                return new List<IStatement>()
                 {
-                    Condition = condition,
-                    ThenBlock = thenBlock,
-                    ElseBlock = elseBlock,
+                    new IfStatement()
+                    {
+                        Condition = condition,
+                        ThenBlock = thenBlock,
+                        ElseBlock = elseBlock,
+                    }
                 };
             }
 
@@ -106,9 +129,12 @@ namespace Magro.Syake.Parsing
             {
                 scan.Next();
 
-                return new ExpressionStatement()
+                return new List<IStatement>()
                 {
-                    Expression = expression,
+                    new ExpressionStatement()
+                    {
+                        Expression = expression,
+                    }
                 };
             }
 
@@ -120,10 +146,13 @@ namespace Magro.Syake.Parsing
                 scan.Expect(TokenKind.SemiCollon);
                 scan.Next();
 
-                return new AssignStatement()
+                return new List<IStatement>()
                 {
-                    Target = expression,
-                    Content = right,
+                    new AssignStatement()
+                    {
+                        Target = expression,
+                        Content = right,
+                    }
                 };
             }
 
@@ -134,9 +163,12 @@ namespace Magro.Syake.Parsing
                 scan.Expect(TokenKind.SemiCollon);
                 scan.Next();
 
-                return new IncrementStatement()
+                return new List<IStatement>()
                 {
-                    Target = expression,
+                    new IncrementStatement()
+                    {
+                        Target = expression,
+                    }
                 };
             }
 
@@ -147,9 +179,12 @@ namespace Magro.Syake.Parsing
                 scan.Expect(TokenKind.SemiCollon);
                 scan.Next();
 
-                return new DecrementStatement()
+                return new List<IStatement>()
                 {
-                    Target = expression,
+                    new DecrementStatement()
+                    {
+                        Target = expression,
+                    }
                 };
             }
 
@@ -189,7 +224,7 @@ namespace Magro.Syake.Parsing
             var statements = new List<IStatement>();
             while (!scan.Is(TokenKind.CloseBrace))
             {
-                statements.Add(ParseStatement(scan));
+                statements.AddRange(ParseStatement(scan));
             }
 
             scan.Expect(TokenKind.CloseBrace);

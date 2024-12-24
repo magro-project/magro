@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Magro.Syake.Parsing
+namespace Magro.Syake.Syntax
 {
     internal partial class Parser
     {

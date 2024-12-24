@@ -1,4 +1,4 @@
-﻿namespace Magro.Syake
+﻿namespace Magro.Syake.Syntax
 {
     internal class Location
     {

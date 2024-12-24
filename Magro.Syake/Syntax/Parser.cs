@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Magro.Syake.Parsing
+namespace Magro.Syake.Syntax
 {
     internal partial class Parser
     {
@@ -13,7 +13,7 @@ namespace Magro.Syake.Parsing
 
             while (!scan.Is(TokenKind.EOF))
             {
-                statements.Add(ParseStatement(scan));
+                statements.AddRange(ParseStatement(scan));
             }
 
             return new ModuleDeclaration()

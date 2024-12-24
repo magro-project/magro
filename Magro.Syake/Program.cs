@@ -1,4 +1,4 @@
-﻿using Magro.Syake.Parsing;
+﻿using Magro.Syake.Syntax;
 using System;
 using System.IO;
 

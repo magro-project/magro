@@ -117,7 +117,7 @@ namespace Magro.Syake.Syntax
 
         private IExpression ParsePrefix(Scanner scan, int minimumBindPower)
         {
-            // TODO
+            // TODO: Not
 
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
@@ -178,14 +178,93 @@ namespace Magro.Syake.Syntax
                 };
             }
 
-            // TODO
+            if (opTokenKind == TokenKind.Lt)
+            {
+                return new RelationalOperator()
+                {
+                    RelationalOperatorKind = RelationalOperatorKind.Lt,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.LtEq)
+            {
+                return new RelationalOperator()
+                {
+                    RelationalOperatorKind = RelationalOperatorKind.LtEq,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.Gt)
+            {
+                return new RelationalOperator()
+                {
+                    RelationalOperatorKind = RelationalOperatorKind.Gt,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.GtEq)
+            {
+                return new RelationalOperator()
+                {
+                    RelationalOperatorKind = RelationalOperatorKind.GtEq,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.Equal2)
+            {
+                return new RelationalOperator()
+                {
+                    RelationalOperatorKind = RelationalOperatorKind.Equal,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.NotEqual)
+            {
+                return new RelationalOperator()
+                {
+                    RelationalOperatorKind = RelationalOperatorKind.NotEqual,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.And2)
+            {
+                return new LogicOperator()
+                {
+                    LogicOperatorKind = LogicOperatorKind.And,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.Or2)
+            {
+                return new LogicOperator()
+                {
+                    LogicOperatorKind = LogicOperatorKind.Or,
+                    Left = left,
+                    Right = right,
+                };
+            }
 
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
         private IExpression ParsePostfix(Scanner scan, IExpression expr)
         {
-            // TODO
+            // TODO: OpenParen
+            // TODO: OpenBracket
 
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }

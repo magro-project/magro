@@ -5,23 +5,21 @@ namespace Magro.Syake
     internal class CharStream
     {
         private StreamReader Reader;
-
-        public int Line { get; private set; }
-        public int Column { get; private set; }
-        public char? CurrentChar { get; private set; }
-
-        public bool EndOfStream
-        {
-            get => CurrentChar == null;
-        }
+        private int Line { get; set; }
+        private int Column { get; set; }
+        private char? CurrentChar { get; set; }
 
         public CharStream(StreamReader reader)
         {
             Reader = reader;
-            CurrentChar = null;
             Line = 1;
             Column = 1;
             CurrentChar = ReadOne();
+        }
+
+        public char? GetChar()
+        {
+            return CurrentChar;
         }
 
         public Location GetLocation()
@@ -31,7 +29,7 @@ namespace Magro.Syake
 
         public void Next()
         {
-            if (EndOfStream)
+            if (CurrentChar == null)
                 return;
 
             // consume LF

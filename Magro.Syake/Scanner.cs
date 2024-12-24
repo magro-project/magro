@@ -90,14 +90,14 @@ namespace Magro.Syake
         {
             while (true)
             {
-                if (Stream.EndOfStream)
+                if (Stream.GetChar() == null)
                 {
                     var location = Stream.GetLocation();
                     return new Token(TokenKind.EOF, location, location);
                 }
 
                 // skip spacing
-                if (IsSpacingChar(Stream.CurrentChar))
+                if (IsSpacingChar(Stream.GetChar()))
                 {
                     Stream.Next();
                     continue;
@@ -105,7 +105,7 @@ namespace Magro.Syake
 
                 var begin = Stream.GetLocation();
 
-                switch (Stream.CurrentChar)
+                switch (Stream.GetChar())
                 {
                     case '[':
                         Stream.Next();
@@ -218,27 +218,29 @@ namespace Magro.Syake
             var buf = new StringBuilder();
             var begin = Stream.GetLocation();
 
-            while (!Stream.EndOfStream)
+            while (Stream.GetChar() != null)
             {
                 var first = (buf.Length == 0);
-                if (!IsNumberChar(Stream.CurrentChar, first)) break;
-                buf.Append(Stream.CurrentChar);
+                var ch = Stream.GetChar();
+                if (!IsNumberChar(ch, first)) break;
+                buf.Append(ch);
                 Stream.Next();
             }
 
-            if (!Stream.EndOfStream && Stream.CurrentChar == '.')
+            if (Stream.GetChar() == '.')
             {
                 var buf2 = new StringBuilder();
-                buf2.Append(Stream.CurrentChar);
+                buf2.Append(Stream.GetChar());
                 Stream.Next();
 
                 var numberLocation2 = Stream.GetLocation();
 
-                while (!Stream.EndOfStream)
+                while (Stream.GetChar() != null)
                 {
                     var first = (buf2.Length == 0);
-                    if (!IsNumberChar(Stream.CurrentChar, first)) break;
-                    buf2.Append(Stream.CurrentChar);
+                    var ch = Stream.GetChar();
+                    if (!IsNumberChar(ch, first)) break;
+                    buf2.Append(ch);
                     Stream.Next();
                 }
 
@@ -274,10 +276,11 @@ namespace Magro.Syake
             var buf = new StringBuilder();
             var begin = Stream.GetLocation();
 
-            while (!Stream.EndOfStream)
+            while (Stream.GetChar() != null)
             {
-                if (!IsIdentifierChar(Stream.CurrentChar)) break;
-                buf.Append(Stream.CurrentChar);
+                var ch = Stream.GetChar();
+                if (!IsIdentifierChar(ch)) break;
+                buf.Append(ch);
                 Stream.Next();
             }
 

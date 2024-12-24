@@ -26,7 +26,7 @@ namespace Magro.Syake
             return Tokens[0].TokenKind;
         }
 
-        public object GetTokenContent()
+        public string GetTokenContent()
         {
             return Tokens[0].Content;
         }
@@ -39,8 +39,7 @@ namespace Magro.Syake
         public bool Is(string word)
         {
             if (Tokens[0].TokenKind != TokenKind.Word) return false;
-            var actualWord = (string)Tokens[0].Content;
-            return actualWord == word;
+            return Tokens[0].Content == word;
         }
 
         public void Expect(TokenKind kind)

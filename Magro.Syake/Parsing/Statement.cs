@@ -12,7 +12,7 @@ namespace Magro.Syake.Parsing
             {
                 scan.Next();
                 scan.Expect(TokenKind.Word);
-                var name = (string)scan.GetTokenContent();
+                var name = scan.GetTokenContent();
                 scan.Next();
                 var parameters = ParseParameters(scan);
                 var block = ParseBlock(scan);
@@ -29,7 +29,7 @@ namespace Magro.Syake.Parsing
             {
                 scan.Next();
                 scan.Expect(TokenKind.Word);
-                var name = (string)scan.GetTokenContent();
+                var name = scan.GetTokenContent();
                 scan.Next();
 
                 IExpression initializer = null;
@@ -166,7 +166,7 @@ namespace Magro.Syake.Parsing
             while (!scan.Is(TokenKind.CloseParen))
             {
                 scan.Expect(TokenKind.Word);
-                parameters.Add((string)scan.GetTokenContent());
+                parameters.Add(scan.GetTokenContent());
                 scan.Next();
 
                 if (scan.Is(TokenKind.Comma))

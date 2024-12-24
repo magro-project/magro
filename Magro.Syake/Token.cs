@@ -5,7 +5,7 @@
         public TokenKind TokenKind { get; set; }
         public Location BeginLocation { get; set; }
         public Location EndLocation { get; set; }
-        public object Content { get; set; }
+        public string Content { get; set; }
 
         public Token(TokenKind tokenKind, Location beginLocation, Location endLocation)
         {
@@ -49,14 +49,12 @@
 
             if (TokenKind == TokenKind.Word)
             {
-                var content = (string)Content;
-                return "'" + content + "'";
+                return "'" + Content + "'";
             }
 
             if (TokenKind == TokenKind.Number)
             {
-                var content = (string)Content;
-                return "'" + content + "'";
+                return "'" + Content + "'";
             }
 
             throw new System.Exception("Invalid token");

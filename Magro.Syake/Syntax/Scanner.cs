@@ -144,17 +144,29 @@ namespace Magro.Syake.Syntax
 
                     case '=':
                         Stream.Next();
-                        // TODO: ==
+                        if (Stream.GetChar() == '=')
+                        {
+                            Stream.Next();
+                            return new Token(TokenKind.Equal2, begin, Stream.GetLocation());
+                        }
                         return new Token(TokenKind.Equal, begin, Stream.GetLocation());
 
                     case '>':
                         Stream.Next();
-                        // TODO: >=
+                        if (Stream.GetChar() == '=')
+                        {
+                            Stream.Next();
+                            return new Token(TokenKind.GtEq, begin, Stream.GetLocation());
+                        }
                         return new Token(TokenKind.Gt, begin, Stream.GetLocation());
 
                     case '<':
                         Stream.Next();
-                        // TODO: <=
+                        if (Stream.GetChar() == '=')
+                        {
+                            Stream.Next();
+                            return new Token(TokenKind.LtEq, begin, Stream.GetLocation());
+                        }
                         return new Token(TokenKind.Lt, begin, Stream.GetLocation());
 
                     case '!':
@@ -163,12 +175,20 @@ namespace Magro.Syake.Syntax
 
                     case '+':
                         Stream.Next();
-                        // TODO: ++
+                        if (Stream.GetChar() == '+')
+                        {
+                            Stream.Next();
+                            return new Token(TokenKind.Plus2, begin, Stream.GetLocation());
+                        }
                         return new Token(TokenKind.Plus, begin, Stream.GetLocation());
 
                     case '-':
                         Stream.Next();
-                        // TODO: --
+                        if (Stream.GetChar() == '-')
+                        {
+                            Stream.Next();
+                            return new Token(TokenKind.Minus2, begin, Stream.GetLocation());
+                        }
                         return new Token(TokenKind.Minus, begin, Stream.GetLocation());
 
                     case '*':
@@ -185,13 +205,21 @@ namespace Magro.Syake.Syntax
 
                     case '&':
                         Stream.Next();
-                        // TODO
-                        return new Token(TokenKind.And2, begin, Stream.GetLocation());
+                        if (Stream.GetChar() == '&')
+                        {
+                            Stream.Next();
+                            return new Token(TokenKind.And2, begin, Stream.GetLocation());
+                        }
+                        throw new ApplicationException($"Invalid character ({begin})");
 
                     case '|':
                         Stream.Next();
-                        // TODO
-                        return new Token(TokenKind.Or2, begin, Stream.GetLocation());
+                        if (Stream.GetChar() == '|')
+                        {
+                            Stream.Next();
+                            return new Token(TokenKind.Or2, begin, Stream.GetLocation());
+                        }
+                        throw new ApplicationException($"Invalid character ({begin})");
                 }
 
                 Token token;

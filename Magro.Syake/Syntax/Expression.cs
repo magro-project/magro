@@ -101,6 +101,17 @@ namespace Magro.Syake.Syntax
         {
             // TODO
 
+            if (scan.Is(TokenKind.Word))
+            {
+                var name = scan.GetTokenContent();
+                scan.Next();
+
+                return new ReferenceExpression()
+                {
+                    Name = name,
+                };
+            }
+
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
@@ -113,6 +124,60 @@ namespace Magro.Syake.Syntax
 
         private IExpression ParseInfix(Scanner scan, IExpression left, int minimumBindPower)
         {
+            var opTokenKind = scan.GetTokenKind();
+            scan.Next();
+            var right = ParsePratt(scan, minimumBindPower);
+
+            if (opTokenKind == TokenKind.Plus)
+            {
+                return new MathOperator()
+                {
+                    MathOperatorKind = MathOperatorKind.Add,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.Minus)
+            {
+                return new MathOperator()
+                {
+                    MathOperatorKind = MathOperatorKind.Sub,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.Astarisk)
+            {
+                return new MathOperator()
+                {
+                    MathOperatorKind = MathOperatorKind.Mul,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.Slash)
+            {
+                return new MathOperator()
+                {
+                    MathOperatorKind = MathOperatorKind.Div,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
+            if (opTokenKind == TokenKind.Percent)
+            {
+                return new MathOperator()
+                {
+                    MathOperatorKind = MathOperatorKind.Rem,
+                    Left = left,
+                    Right = right,
+                };
+            }
+
             // TODO
 
             throw new ApplicationException("Unexpected token " + scan.GetToken());

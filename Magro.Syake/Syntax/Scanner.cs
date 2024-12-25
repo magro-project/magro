@@ -224,7 +224,10 @@ namespace Magro.Syake.Syntax
 
                 Token token;
 
-                // TODO: string literal
+                if (TryReadString(out token))
+                {
+                    return token;
+                }
 
                 if (TryReadNumber(out token))
                 {
@@ -237,6 +240,48 @@ namespace Magro.Syake.Syntax
                 }
 
                 throw new ApplicationException($"Invalid character ({begin})");
+            }
+        }
+
+        private bool TryReadString(out Token token)
+        {
+            token = null;
+
+            var buf = new StringBuilder();
+            var begin = Stream.GetLocation();
+
+            if (Stream.GetChar() != '"')
+            {
+                return false;
+            }
+            Stream.Next();
+
+            while (Stream.GetChar() != null)
+            {
+                var ch = Stream.GetChar();
+                if (ch == '"') break;
+                buf.Append(ch);
+                Stream.Next();
+            }
+
+            if (Stream.GetChar() != '"')
+            {
+                throw new ApplicationException($"'\"' expected. ({Stream.GetLocation()})");
+            }
+            Stream.Next();
+
+            if (buf.Length > 0)
+            {
+                buf.ToString();
+                token = new Token(TokenKind.String, begin, Stream.GetLocation())
+                {
+                    Content = buf.ToString()
+                };
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

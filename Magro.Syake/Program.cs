@@ -1,4 +1,5 @@
-﻿using Magro.Syake.Syntax;
+﻿using Magro.Common.MiddleLevel;
+using Magro.Syake.Syntax;
 using System;
 using System.IO;
 
@@ -10,8 +11,12 @@ namespace Magro.Syake
         {
             Console.WriteLine("SyakeScript Compiler");
             var parser = new Parser();
-            var reader = new StreamReader("../../main.ss");
-            var module = parser.Parse("main", reader);
+
+            ModuleDeclaration module;
+            using (var reader = new StreamReader("../../main.ss"))
+            {
+                module = parser.Parse("main", reader);
+            }
         }
     }
 }

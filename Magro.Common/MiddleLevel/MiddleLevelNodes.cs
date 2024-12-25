@@ -27,6 +27,11 @@ namespace Magro.Common.MiddleLevel
         IncrementStatement,
         DecrementStatement,
         IfStatement,
+        WhileStatement,
+        ForStatement,
+        BreakStatement,
+        ContinueStatement,
+        ReturnStatement,
         Block,
         ExpressionStatement,
     }
@@ -141,7 +146,7 @@ namespace Magro.Common.MiddleLevel
         public IExpression Target { get; set; }
     }
 
-    // if A { B } else { C }
+    // if (A) { B } else { C }
     public class IfStatement : IStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.IfStatement;
@@ -149,6 +154,43 @@ namespace Magro.Common.MiddleLevel
         public IExpression Condition { get; set; }
         public Block ThenBlock { get; set; }
         public Block ElseBlock { get; set; }
+    }
+
+    // while (A) { B }
+    public class WhileStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.WhileStatement;
+
+        public IExpression Condition { get; set; }
+        public Block LoopBlock { get; set; }
+    }
+
+    // for (var A in B) { C }
+    public class ForStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.ForStatement;
+
+        public string VariableName { get; set; }
+        public IExpression Iterable { get; set; }
+        public Block LoopBlock { get; set; }
+    }
+
+    public class BreakStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.BreakStatement;
+    }
+
+    public class ContinueStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.ContinueStatement;
+    }
+
+    public class ReturnStatement : IStatement
+    {
+        public StatementKind StatementKind { get; } = StatementKind.ReturnStatement;
+
+        public bool HasValue { get; set; }
+        public IExpression Value { get; set; }
     }
 
     // { }

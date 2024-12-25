@@ -122,6 +122,51 @@ namespace Magro.Syake.Syntax
                 };
             }
 
+            if (scan.Is("while"))
+            {
+                scan.Next();
+
+                // TODO: while statement
+
+                throw new NotImplementedException();
+            }
+
+            if (scan.Is("for"))
+            {
+                scan.Next();
+
+                // TODO: for statement
+
+                throw new NotImplementedException();
+            }
+
+            if (scan.Is("break"))
+            {
+                scan.Next();
+
+                // TODO: break statement
+
+                throw new NotImplementedException();
+            }
+
+            if (scan.Is("continue"))
+            {
+                scan.Next();
+
+                // TODO: continue statement
+
+                throw new NotImplementedException();
+            }
+
+            if (scan.Is("return"))
+            {
+                scan.Next();
+
+                // TODO: return statement
+
+                throw new NotImplementedException();
+            }
+
             var expression = ParseExpression(scan);
 
             // expression statement

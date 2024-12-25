@@ -77,6 +77,7 @@ namespace Magro.Common.MiddleLevel
 
     public enum ValueKind
     {
+        Null,
         Number,
         String,
         Boolean,

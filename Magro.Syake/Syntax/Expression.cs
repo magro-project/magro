@@ -99,7 +99,62 @@ namespace Magro.Syake.Syntax
 
         private IExpression ParseAtom(Scanner scan)
         {
-            // TODO
+            if (scan.Is(TokenKind.Number))
+            {
+                var value = scan.GetTokenContent();
+                scan.Next();
+
+                return new ValueExpression()
+                {
+                    ValueKind = ValueKind.Number,
+                    Value = double.Parse(value),
+                };
+            }
+
+            if (scan.Is(TokenKind.String))
+            {
+                var value = scan.GetTokenContent();
+                scan.Next();
+
+                return new ValueExpression()
+                {
+                    ValueKind = ValueKind.String,
+                    Value = value,
+                };
+            }
+
+            if (scan.Is("true"))
+            {
+                scan.Next();
+
+                return new ValueExpression()
+                {
+                    ValueKind = ValueKind.Boolean,
+                    Value = true,
+                };
+            }
+
+            if (scan.Is("false"))
+            {
+                scan.Next();
+
+                return new ValueExpression()
+                {
+                    ValueKind = ValueKind.Boolean,
+                    Value = false,
+                };
+            }
+
+            if (scan.Is("null"))
+            {
+                scan.Next();
+
+                return new ValueExpression()
+                {
+                    ValueKind = ValueKind.Null,
+                    Value = null,
+                };
+            }
 
             if (scan.Is(TokenKind.Word))
             {
@@ -110,6 +165,17 @@ namespace Magro.Syake.Syntax
                 {
                     Name = name,
                 };
+            }
+
+            // grouping operator
+            if (scan.Is(TokenKind.OpenParen))
+            {
+                scan.Next();
+                var expression = ParseExpression(scan);
+                scan.Expect(TokenKind.CloseParen);
+                scan.Next();
+
+                return expression;
             }
 
             throw new ApplicationException("Unexpected token " + scan.GetToken());

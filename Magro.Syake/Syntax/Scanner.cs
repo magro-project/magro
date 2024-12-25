@@ -224,6 +224,8 @@ namespace Magro.Syake.Syntax
 
                 Token token;
 
+                // TODO: string literal
+
                 if (TryReadNumber(out token))
                 {
                     return token;

@@ -72,6 +72,7 @@
 
         Word,
         Number,
+        String,
 
         /// <summary>
         /// "["

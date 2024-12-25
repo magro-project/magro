@@ -117,7 +117,16 @@ namespace Magro.Syake.Syntax
 
         private IExpression ParsePrefix(Scanner scan, int minimumBindPower)
         {
-            // TODO: Not
+            if (scan.Is(TokenKind.Not))
+            {
+                scan.Next();
+                var target = ParseExpression(scan);
+
+                return new NotOperator()
+                {
+                    Left = target,
+                };
+            }
 
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
@@ -263,8 +272,63 @@ namespace Magro.Syake.Syntax
 
         private IExpression ParsePostfix(Scanner scan, IExpression expr)
         {
-            // TODO: OpenParen
-            // TODO: OpenBracket
+            if (scan.Is(TokenKind.OpenParen))
+            {
+                scan.Next();
+
+                var arguments = new List<IExpression>();
+                while (!scan.Is(TokenKind.CloseParen))
+                {
+                    arguments.Add(ParseExpression(scan));
+
+                    if (scan.Is(TokenKind.Comma))
+                    {
+                        scan.Next();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                scan.Expect(TokenKind.CloseParen);
+                scan.Next();
+
+                return new CallExpression()
+                {
+                    Target = expr,
+                    Arguments = arguments,
+                };
+            }
+
+            if (scan.Is(TokenKind.OpenBracket))
+            {
+                scan.Next();
+
+                var indexes = new List<IExpression>();
+                while (!scan.Is(TokenKind.CloseBracket))
+                {
+                    indexes.Add(ParseExpression(scan));
+
+                    if (scan.Is(TokenKind.Comma))
+                    {
+                        scan.Next();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                scan.Expect(TokenKind.CloseBracket);
+                scan.Next();
+
+                return new IndexExpression()
+                {
+                    Target = expr,
+                    Indexes = indexes,
+                };
+            }
 
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }

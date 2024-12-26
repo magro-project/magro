@@ -16,7 +16,7 @@ namespace Magro.Syake.Syntax
             new PostfixOperator(TokenKind.OpenParen,    45),
             new PostfixOperator(TokenKind.OpenBracket,  45),
 
-//          new InfixOperator(TokenKind.Dot,            40, 41),
+            new PostfixOperator(TokenKind.Dot,          40),
 
 //          new PrefixOperator(TokenKind.Plus,          35),
 //          new PrefixOperator(TokenKind.Minus,         35),
@@ -389,10 +389,24 @@ namespace Magro.Syake.Syntax
                 scan.Expect(TokenKind.CloseBracket);
                 scan.Next();
 
-                return new IndexExpression()
+                return new IndexAccessExpression()
                 {
                     Target = expr,
                     Indexes = indexes,
+                };
+            }
+
+            if (scan.Is(TokenKind.Dot))
+            {
+                scan.Next();
+                scan.Expect(TokenKind.Word);
+                var fieldName = scan.GetTokenContent();
+                scan.Next();
+
+                return new FieldAccessExpression()
+                {
+                    Target = expr,
+                    FieldName = fieldName,
                 };
             }
 

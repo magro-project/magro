@@ -205,8 +205,6 @@ namespace Magro.Syake.Syntax
                 return new List<IStatement>()
                 {
                     new BreakStatement()
-                    {
-                    }
                 };
             }
 
@@ -219,8 +217,6 @@ namespace Magro.Syake.Syntax
                 return new List<IStatement>()
                 {
                     new ContinueStatement()
-                    {
-                    }
                 };
             }
 
@@ -241,7 +237,6 @@ namespace Magro.Syake.Syntax
                 {
                     new ReturnStatement()
                     {
-                        HasValue = value != null,
                         Value = value,
                     }
                 };

@@ -125,46 +125,126 @@ namespace Magro.Syake.Syntax
             if (scan.Is("while"))
             {
                 scan.Next();
+                scan.Expect(TokenKind.OpenParen);
+                scan.Next();
+                var condition = ParseExpression(scan);
+                scan.Expect(TokenKind.CloseParen);
+                scan.Next();
 
-                // TODO: while statement
+                Block loopBlock;
+                if (scan.Is(TokenKind.OpenBrace))
+                {
+                    loopBlock = ParseBlock(scan);
+                }
+                else
+                {
+                    var statements = ParseStatement(scan);
+                    loopBlock = new Block()
+                    {
+                        Statements = statements,
+                    };
+                }
 
-                throw new NotImplementedException();
+                return new List<IStatement>()
+                {
+                    new WhileStatement()
+                    {
+                        Condition = condition,
+                        LoopBlock = loopBlock,
+                    }
+                };
             }
 
             if (scan.Is("for"))
             {
                 scan.Next();
+                scan.Expect(TokenKind.OpenParen);
+                scan.Next();
+                scan.Expect("var");
+                scan.Next();
+                scan.Expect(TokenKind.Word);
+                var name = scan.GetTokenContent();
+                scan.Next();
+                scan.Expect("in");
+                scan.Next();
+                var iterable = ParseExpression(scan);
+                scan.Expect(TokenKind.CloseParen);
+                scan.Next();
 
-                // TODO: for statement
+                Block loopBlock;
+                if (scan.Is(TokenKind.OpenBrace))
+                {
+                    loopBlock = ParseBlock(scan);
+                }
+                else
+                {
+                    var statements = ParseStatement(scan);
+                    loopBlock = new Block()
+                    {
+                        Statements = statements,
+                    };
+                }
 
-                throw new NotImplementedException();
+                return new List<IStatement>()
+                {
+                    new ForStatement()
+                    {
+                        VariableName = name,
+                        Iterable = iterable,
+                        LoopBlock = loopBlock,
+                    }
+                };
             }
 
             if (scan.Is("break"))
             {
                 scan.Next();
+                scan.Expect(TokenKind.SemiCollon);
+                scan.Next();
 
-                // TODO: break statement
-
-                throw new NotImplementedException();
+                return new List<IStatement>()
+                {
+                    new BreakStatement()
+                    {
+                    }
+                };
             }
 
             if (scan.Is("continue"))
             {
                 scan.Next();
+                scan.Expect(TokenKind.SemiCollon);
+                scan.Next();
 
-                // TODO: continue statement
-
-                throw new NotImplementedException();
+                return new List<IStatement>()
+                {
+                    new ContinueStatement()
+                    {
+                    }
+                };
             }
 
             if (scan.Is("return"))
             {
                 scan.Next();
 
-                // TODO: return statement
+                IExpression value = null;
+                if (!scan.Is(TokenKind.SemiCollon))
+                {
+                    value = ParseExpression(scan);
+                }
 
-                throw new NotImplementedException();
+                scan.Expect(TokenKind.SemiCollon);
+                scan.Next();
+
+                return new List<IStatement>()
+                {
+                    new ReturnStatement()
+                    {
+                        HasValue = value != null,
+                        Value = value,
+                    }
+                };
             }
 
             var expression = ParseExpression(scan);

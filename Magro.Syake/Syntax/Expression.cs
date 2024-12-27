@@ -18,8 +18,8 @@ namespace Magro.Syake.Syntax
 
             new PostfixOperator(TokenKind.Dot,          40),
 
-//          new PrefixOperator(TokenKind.Plus,          35),
-//          new PrefixOperator(TokenKind.Minus,         35),
+            new PrefixOperator(TokenKind.Plus,          35),
+            new PrefixOperator(TokenKind.Minus,         35),
             new PrefixOperator(TokenKind.Not,           35),
 
             new InfixOperator(TokenKind.Astarisk,       30, 31),
@@ -190,7 +190,31 @@ namespace Magro.Syake.Syntax
 
                 return new NotOperator()
                 {
-                    Left = target,
+                    Target = target,
+                };
+            }
+
+            if (scan.Is(TokenKind.Plus))
+            {
+                scan.Next();
+                var target = ParseExpression(scan);
+
+                return new SignExpression()
+                {
+                    SignKind = SignKind.Positive,
+                    Target = target,
+                };
+            }
+
+            if (scan.Is(TokenKind.Minus))
+            {
+                scan.Next();
+                var target = ParseExpression(scan);
+
+                return new SignExpression()
+                {
+                    SignKind = SignKind.Negative,
+                    Target = target,
                 };
             }
 

@@ -51,6 +51,7 @@ namespace Magro.Common.MiddleLevel
         IndexExpression,
         CallExpression,
         NotOperator,
+        SignExpression,
         RelationalOperator,
         LogicOperator,
         MathOperator,
@@ -88,6 +89,12 @@ namespace Magro.Common.MiddleLevel
         String,
         Boolean,
         Object,
+    }
+
+    public enum SignKind
+    {
+        Positive,
+        Negative,
     }
 
     public class ModuleDeclaration : IDeclaration
@@ -264,7 +271,15 @@ namespace Magro.Common.MiddleLevel
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.NotOperator;
 
-        public IExpression Left { get; set; }
+        public IExpression Target { get; set; }
+    }
+
+    public class SignExpression : IExpression
+    {
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.SignExpression;
+
+        public SignKind SignKind { get; set; }
+        public IExpression Target { get; set; }
     }
 
     public class RelationalOperator : IExpression

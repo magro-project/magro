@@ -13,33 +13,25 @@ namespace Magro.Syake.Syntax
 
         public List<IOperator> Operators = new List<IOperator>()
         {
-            new PostfixOperator(TokenKind.OpenParen,    45),
-            new PostfixOperator(TokenKind.OpenBracket,  45),
-
-            new PostfixOperator(TokenKind.Dot,          40),
-
-            new PrefixOperator(TokenKind.Plus,          35),
-            new PrefixOperator(TokenKind.Minus,         35),
-            new PrefixOperator(TokenKind.Not,           35),
-
-            new InfixOperator(TokenKind.Astarisk,       30, 31),
-            new InfixOperator(TokenKind.Slash,          30, 31),
-            new InfixOperator(TokenKind.Percent,        30, 31),
-
-            new InfixOperator(TokenKind.Plus,           25, 26),
-            new InfixOperator(TokenKind.Minus,          25, 26),
-
-            new InfixOperator(TokenKind.Lt,             20, 21),
-            new InfixOperator(TokenKind.LtEq,           20, 21),
-            new InfixOperator(TokenKind.Gt,             20, 21),
-            new InfixOperator(TokenKind.GtEq,           20, 21),
-
-            new InfixOperator(TokenKind.Equal2,         15, 16),
-            new InfixOperator(TokenKind.NotEqual,       15, 16),
-
-            new InfixOperator(TokenKind.And2,           10, 11),
-
-            new InfixOperator(TokenKind.Or2,             5,  6),
+            new PostfixOperator(TokenKind.Dot,          34),
+            new PostfixOperator(TokenKind.OpenBracket,  34),
+            new PostfixOperator(TokenKind.OpenParen,    34),
+            new PrefixOperator(TokenKind.Plus,          28),
+            new PrefixOperator(TokenKind.Minus,         28),
+            new PrefixOperator(TokenKind.Not,           28),
+            new InfixOperator(TokenKind.Astarisk,       24, 25),
+            new InfixOperator(TokenKind.Slash,          24, 25),
+            new InfixOperator(TokenKind.Percent,        24, 25),
+            new InfixOperator(TokenKind.Plus,           22, 23),
+            new InfixOperator(TokenKind.Minus,          22, 23),
+            new InfixOperator(TokenKind.Lt,             18, 19),
+            new InfixOperator(TokenKind.LtEq,           18, 19),
+            new InfixOperator(TokenKind.Gt,             18, 19),
+            new InfixOperator(TokenKind.GtEq,           18, 19),
+            new InfixOperator(TokenKind.Equal2,         16, 17),
+            new InfixOperator(TokenKind.NotEqual,       16, 17),
+            new InfixOperator(TokenKind.And2,            8,  9),
+            new InfixOperator(TokenKind.Or2,             6,  7),
         };
 
         private IExpression ParsePratt(Scanner scan, int minimumBindPower)
@@ -54,7 +46,7 @@ namespace Magro.Syake.Syntax
                 x.OperatorKind == OperatorKind.PrefixOperator && ((PrefixOperator)x).TokenKind == scan.GetTokenKind());
             if (prefix != null)
             {
-                left = ParsePrefix(scan, prefix.BindPower);
+                left = ParsePrefix(scan);
             }
             else
             {
@@ -181,24 +173,22 @@ namespace Magro.Syake.Syntax
             throw new ApplicationException("Unexpected token " + scan.GetToken());
         }
 
-        private IExpression ParsePrefix(Scanner scan, int minimumBindPower)
+        private IExpression ParsePrefix(Scanner scan)
         {
-            if (scan.Is(TokenKind.Not))
-            {
-                scan.Next();
-                var target = ParseExpression(scan);
+            var opTokenKind = scan.GetTokenKind();
+            scan.Next();
+            var target = ParseExpression(scan);
 
+            if (opTokenKind == TokenKind.Not)
+            {
                 return new NotOperator()
                 {
                     Target = target,
                 };
             }
 
-            if (scan.Is(TokenKind.Plus))
+            if (opTokenKind == TokenKind.Plus)
             {
-                scan.Next();
-                var target = ParseExpression(scan);
-
                 return new SignExpression()
                 {
                     SignKind = SignKind.Positive,
@@ -206,11 +196,8 @@ namespace Magro.Syake.Syntax
                 };
             }
 
-            if (scan.Is(TokenKind.Minus))
+            if (opTokenKind == TokenKind.Minus)
             {
-                scan.Next();
-                var target = ParseExpression(scan);
-
                 return new SignExpression()
                 {
                     SignKind = SignKind.Negative,
@@ -384,7 +371,7 @@ namespace Magro.Syake.Syntax
                 scan.Expect(TokenKind.CloseParen);
                 scan.Next();
 
-                return new CallExpression()
+                return new CallFuncExpression()
                 {
                     Target = expr,
                     Arguments = arguments,
@@ -424,13 +411,13 @@ namespace Magro.Syake.Syntax
             {
                 scan.Next();
                 scan.Expect(TokenKind.Word);
-                var fieldName = scan.GetTokenContent();
+                var memberName = scan.GetTokenContent();
                 scan.Next();
 
-                return new FieldAccessExpression()
+                return new MemberAccessExpression()
                 {
                     Target = expr,
-                    FieldName = fieldName,
+                    MemberName = memberName,
                 };
             }
 

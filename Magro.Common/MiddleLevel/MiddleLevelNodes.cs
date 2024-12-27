@@ -47,9 +47,9 @@ namespace Magro.Common.MiddleLevel
     {
         ValueExpression,
         ReferenceExpression,
-        FieldExpression,
-        IndexExpression,
-        CallExpression,
+        MemberAccessExpression,
+        IndexAccessExpression,
+        CallFuncExpression,
         NotOperator,
         SignExpression,
         RelationalOperator,
@@ -240,28 +240,28 @@ namespace Magro.Common.MiddleLevel
         public string Name { get; set; }
     }
 
-    // Target.FieldName
-    public class FieldAccessExpression : IExpression
+    // Target.MemberName
+    public class MemberAccessExpression : IExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.FieldExpression;
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.MemberAccessExpression;
 
         public IExpression Target { get; set; }
-        public string FieldName { get; set; }
+        public string MemberName { get; set; }
     }
 
     // Target[...Indexes]
     public class IndexAccessExpression : IExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.IndexExpression;
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.IndexAccessExpression;
 
         public IExpression Target { get; set; }
         public List<IExpression> Indexes { get; set; }
     }
 
     // Target(...Arguments)
-    public class CallExpression : IExpression
+    public class CallFuncExpression : IExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.CallExpression;
+        public ExpressionKind ExpressionKind { get; } = ExpressionKind.CallFuncExpression;
 
         public IExpression Target { get; set; }
         public List<IExpression> Arguments { get; set; }

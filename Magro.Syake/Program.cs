@@ -1,5 +1,6 @@
 ﻿using Magro.Common.MiddleLevel;
 using Magro.Syake.Syntax;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -17,6 +18,8 @@ namespace Magro.Syake
             {
                 module = parser.Parse("main", reader);
             }
+
+            Console.WriteLine(JsonConvert.SerializeObject(module, Formatting.Indented));
         }
     }
 }

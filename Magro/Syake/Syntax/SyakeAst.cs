@@ -2,24 +2,24 @@
 
 namespace Magro.Syake.Syntax
 {
-    public interface ISyStatement
+    internal interface ISyStatement
     {
         StatementKind StatementKind { get; }
     }
 
-    public interface ISyDeclaration
+    internal interface ISyDeclaration
     {
         DeclarationKind DeclarationKind { get; }
 
         string Name { get; set; }
     }
 
-    public interface ISyExpression
+    internal interface ISyExpression
     {
         ExpressionKind ExpressionKind { get; }
     }
 
-    public enum StatementKind
+    internal enum StatementKind
     {
         VariableDeclaration,
         FunctionDeclaration,
@@ -36,14 +36,14 @@ namespace Magro.Syake.Syntax
         ExpressionStatement,
     }
 
-    public enum DeclarationKind
+    internal enum DeclarationKind
     {
         ModuleDeclaration,
         FunctionDeclaration,
         VariableDeclaration,
     }
 
-    public enum ExpressionKind
+    internal enum ExpressionKind
     {
         ValueExpression,
         ReferenceExpression,
@@ -57,7 +57,7 @@ namespace Magro.Syake.Syntax
         MathOperator,
     }
 
-    public enum RelationalOperatorKind
+    internal enum RelationalOperatorKind
     {
         Equal,      // Left == Right
         NotEqual,   // Left != Right
@@ -67,13 +67,13 @@ namespace Magro.Syake.Syntax
         LtEq,       // Left <= Right
     }
 
-    public enum LogicOperatorKind
+    internal enum LogicOperatorKind
     {
         And,    // Left && Right
         Or,     // Left || Right
     }
 
-    public enum MathOperatorKind
+    internal enum MathOperatorKind
     {
         Add,    // Left + Right
         Sub,    // Left - Right
@@ -82,22 +82,28 @@ namespace Magro.Syake.Syntax
         Rem,    // Left % Right
     }
 
-    public enum ValueKind
+    internal enum TypeKind
     {
-        Null,
         Number,
         String,
         Boolean,
-        Object,
     }
 
-    public enum SignKind
+    internal enum ValueKind
+    {
+        Number,
+        String,
+        Boolean,
+        Null = 16,
+    }
+
+    internal enum SignKind
     {
         Positive,
         Negative,
     }
 
-    public class SyModuleDeclaration : ISyDeclaration
+    internal class SyModuleDeclaration : ISyDeclaration
     {
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.ModuleDeclaration;
 
@@ -109,28 +115,31 @@ namespace Magro.Syake.Syntax
     }
 
     // var A = B;
-    public class SyVariableDeclaration : ISyStatement, ISyDeclaration
+    internal class SyVariableDeclaration : ISyStatement, ISyDeclaration
     {
         public StatementKind StatementKind { get; } = StatementKind.VariableDeclaration;
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.VariableDeclaration;
 
         public string Name { get; set; }
+        public TypeKind TypeKind { get; set; }
         public ISyExpression Initializer { get; set; }
     }
 
     // function A(...B) { C }
-    public class SyFunctionDeclaration : ISyStatement, ISyDeclaration
+    internal class SyFunctionDeclaration : ISyStatement, ISyDeclaration
     {
         public StatementKind StatementKind { get; } = StatementKind.FunctionDeclaration;
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.FunctionDeclaration;
 
         public string Name { get; set; }
+        public TypeKind ReturnTypeKind { get; set; }
         public List<string> Parameters { get; set; }
+        public List<TypeKind> ParameterTypeKindList { get; set; }
         public SyBlock FunctionBlock { get; set; }
     }
 
     // A = B;
-    public class SyAssignStatement : ISyStatement
+    internal class SyAssignStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.AssignStatement;
 
@@ -139,7 +148,7 @@ namespace Magro.Syake.Syntax
     }
 
     // A++;
-    public class SyIncrementStatement : ISyStatement
+    internal class SyIncrementStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.IncrementStatement;
 
@@ -147,7 +156,7 @@ namespace Magro.Syake.Syntax
     }
 
     // A--;
-    public class SyDecrementStatement : ISyStatement
+    internal class SyDecrementStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.DecrementStatement;
 
@@ -155,7 +164,7 @@ namespace Magro.Syake.Syntax
     }
 
     // if (A) { B } else { C }
-    public class SyIfStatement : ISyStatement
+    internal class SyIfStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.IfStatement;
 
@@ -165,7 +174,7 @@ namespace Magro.Syake.Syntax
     }
 
     // while (A) { B }
-    public class SyWhileStatement : ISyStatement
+    internal class SyWhileStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.WhileStatement;
 
@@ -174,7 +183,7 @@ namespace Magro.Syake.Syntax
     }
 
     // for (var A in B) { C }
-    public class SyForStatement : ISyStatement
+    internal class SyForStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ForStatement;
 
@@ -183,17 +192,17 @@ namespace Magro.Syake.Syntax
         public SyBlock LoopBlock { get; set; }
     }
 
-    public class SyBreakStatement : ISyStatement
+    internal class SyBreakStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.BreakStatement;
     }
 
-    public class SyContinueStatement : ISyStatement
+    internal class SyContinueStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ContinueStatement;
     }
 
-    public class SyReturnStatement : ISyStatement
+    internal class SyReturnStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ReturnStatement;
 
@@ -202,7 +211,7 @@ namespace Magro.Syake.Syntax
     }
 
     // { }
-    public class SyBlock : ISyStatement
+    internal class SyBlock : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.Block;
 
@@ -213,7 +222,7 @@ namespace Magro.Syake.Syntax
     }
 
     // A;
-    public class SyExpressionStatement : ISyStatement
+    internal class SyExpressionStatement : ISyStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ExpressionStatement;
 
@@ -221,7 +230,7 @@ namespace Magro.Syake.Syntax
     }
 
     // Value
-    public class SyValueExpression : ISyExpression
+    internal class SyValueExpression : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.ValueExpression;
 
@@ -230,7 +239,7 @@ namespace Magro.Syake.Syntax
     }
 
     // Name
-    public class SyReferenceExpression : ISyExpression
+    internal class SyReferenceExpression : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.ReferenceExpression;
 
@@ -241,7 +250,7 @@ namespace Magro.Syake.Syntax
     }
 
     // Target.MemberName
-    public class SyMemberAccessExpression : ISyExpression
+    internal class SyMemberAccessExpression : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.MemberAccessExpression;
 
@@ -250,7 +259,7 @@ namespace Magro.Syake.Syntax
     }
 
     // Target[...Indexes]
-    public class SyIndexAccessExpression : ISyExpression
+    internal class SyIndexAccessExpression : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.IndexAccessExpression;
 
@@ -259,7 +268,7 @@ namespace Magro.Syake.Syntax
     }
 
     // Target(...Arguments)
-    public class SyCallFuncExpression : ISyExpression
+    internal class SyCallFuncExpression : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.CallFuncExpression;
 
@@ -267,14 +276,14 @@ namespace Magro.Syake.Syntax
         public List<ISyExpression> Arguments { get; set; }
     }
 
-    public class SyNotOperator : ISyExpression
+    internal class SyNotOperator : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.NotOperator;
 
         public ISyExpression Target { get; set; }
     }
 
-    public class SySignExpression : ISyExpression
+    internal class SySignExpression : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.SignExpression;
 
@@ -282,7 +291,7 @@ namespace Magro.Syake.Syntax
         public ISyExpression Target { get; set; }
     }
 
-    public class SyRelationalOperator : ISyExpression
+    internal class SyRelationalOperator : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.RelationalOperator;
 
@@ -291,7 +300,7 @@ namespace Magro.Syake.Syntax
         public ISyExpression Right { get; set; }
     }
 
-    public class SyLogicOperator : ISyExpression
+    internal class SyLogicOperator : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.LogicOperator;
 
@@ -300,7 +309,7 @@ namespace Magro.Syake.Syntax
         public ISyExpression Right { get; set; }
     }
 
-    public class SyMathOperator : ISyExpression
+    internal class SyMathOperator : ISyExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.MathOperator;
 

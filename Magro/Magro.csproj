@@ -69,7 +69,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Ikura\IkuraAst.cs" />
-    <Compile Include="Golang\GolangAst.cs" />
+    <Compile Include="Golang\GolangGenerator.cs" />
     <Compile Include="Ir\IrNode.cs" />
     <Compile Include="Serializer\SerializerContext.cs" />
     <Compile Include="Syake\Syntax\CharStream.cs" />

@@ -40,7 +40,7 @@ namespace Magro.Ikura
         public IkStatementKind StatementKind { get; } = IkStatementKind.Assign;
 
         public IkVariableDeclaration Target { get; set; }
-        public IkValue Value { get; set; }
+        public IIkValue Value { get; set; }
     }
 
     internal class IkCallFunction : IIkStatement
@@ -48,14 +48,53 @@ namespace Magro.Ikura
         public IkStatementKind StatementKind { get; } = IkStatementKind.CallFunction;
 
         public IkVariableDeclaration ResultTarget { get; set; }
-        public List<IkValue> ArgumentList { get; set; }
+        public List<IIkValue> ArgumentList { get; set; }
     }
 
     // value
 
-    internal class IkValue
+    internal interface IIkValue
     {
+        IkValueKind ValueKind { get; }
+    }
 
+    internal enum IkValueKind
+    {
+        Literal,
+        List,
+        Table,
+    }
+
+    internal enum IkItemKind
+    {
+        String,
+        Number,
+        Boolean,
+        Null = 16,
+    }
+
+    internal class IkLiteralValue : IIkValue
+    {
+        public IkValueKind ValueKind { get; } = IkValueKind.Literal;
+
+        public IkItemKind ItemKind { get; set; }
+        public object Source { get; set; }
+    }
+
+    internal class IkListValue : IIkValue
+    {
+        public IkValueKind ValueKind { get; } = IkValueKind.List;
+
+        public IkItemKind ItemKind { get; set; }
+        public List<object> Source { get; set; }
+    }
+
+    internal class IkTableValue : IIkValue
+    {
+        public IkValueKind ValueKind { get; } = IkValueKind.Table;
+
+        public IkItemKind ItemKind { get; set; }
+        public List<List<object>> Source { get; set; }
     }
 
     // types
@@ -76,10 +115,10 @@ namespace Magro.Ikura
     {
         public IkTypeKind TypeKind { get; } = IkTypeKind.Literal;
 
-        public IkLiteralKind LiteralKind { get; set; }
+        public IkLiteralTypeKind LiteralTypeKind { get; set; }
     }
 
-    internal enum IkLiteralKind
+    internal enum IkLiteralTypeKind
     {
         String,
         Number,

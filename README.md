@@ -1,12 +1,13 @@
 # magro
-A toolset for anyone to create 2D games.
+A 2D game developing environment for anyone.  
+GUI script environment "Ikura" or script language "Syake" can be used to develop any 2D games.  
+Currently under development!
 
 ![editor](./editor.png)
 
 ## Projects
-- Magro editor
-- Syake compiler
-- Magro runtime
+- Magro
+- runtime
 
 ## Scripts
 

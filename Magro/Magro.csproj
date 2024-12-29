@@ -52,10 +52,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
@@ -70,7 +68,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Ikura\SemanticNodes.cs" />
+    <Compile Include="Ikura\IkuraAst.cs" />
+    <Compile Include="Golang\GolangAst.cs" />
+    <Compile Include="Ir\IrNode.cs" />
+    <Compile Include="Serializer\SerializerContext.cs" />
+    <Compile Include="Syake\Syntax\CharStream.cs" />
+    <Compile Include="Syake\Syntax\SyakeParser.Expression.cs" />
+    <Compile Include="Syake\Syntax\Location.cs" />
+    <Compile Include="Syake\Syntax\SyakeAst.cs" />
+    <Compile Include="Syake\Syntax\SyakeParser.cs" />
+    <Compile Include="Syake\Syntax\SyakeTokenReader.cs" />
+    <Compile Include="Syake\Syntax\SyakeParser.Statement.cs" />
+    <Compile Include="Syake\Syntax\SyakeToken.cs" />
     <Compile Include="VersionWindow.xaml.cs">
       <DependentUpon>VersionWindow.xaml</DependentUpon>
     </Compile>
@@ -133,10 +142,7 @@
     <Resource Include="Icons\Settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Magro.Common\Magro.Common.csproj">
-      <Project>{8a8527cf-4f0c-41ff-8b16-0bcff7caf72f}</Project>
-      <Name>Magro.Common</Name>
-    </ProjectReference>
+    <Folder Include="Syake\Semantics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

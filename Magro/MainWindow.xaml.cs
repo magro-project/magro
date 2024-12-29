@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Magro.Syake.Syntax;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,13 +64,21 @@ namespace Magro
 
         private void ExecButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!File.Exists("runtime.exe"))
+            var parser = new SyakeParser();
+
+            SyModuleDeclaration module;
+            using (var reader = new StreamReader("../../main.ss"))
             {
-                MessageBox.Show("実行に失敗しました。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                module = parser.Parse("main", reader);
             }
 
-            Process.Start("runtime.exe");
+            //if (!File.Exists("runtime.exe"))
+            //{
+            //    MessageBox.Show("実行に失敗しました。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return;
+            //}
+
+            //Process.Start("runtime.exe");
         }
 
         // その他

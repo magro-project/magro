@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 
-namespace Magro.Common.MiddleLevel
+namespace Magro.Ir
 {
-    public interface IStatement
+    public interface IIrStatement
     {
         StatementKind StatementKind { get; }
     }
 
-    public interface IDeclaration
+    public interface IIrDeclaration
     {
         DeclarationKind DeclarationKind { get; }
 
         string Name { get; set; }
     }
 
-    public interface IExpression
+    public interface IIrExpression
     {
         ExpressionKind ExpressionKind { get; }
     }
@@ -97,131 +97,131 @@ namespace Magro.Common.MiddleLevel
         Negative,
     }
 
-    public class ModuleDeclaration : IDeclaration
+    public class IrModuleDeclaration : IIrDeclaration
     {
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.ModuleDeclaration;
 
         // semantics
-        public List<IDeclaration> Declarations { get; set; } = new List<IDeclaration>();
+        public List<IIrDeclaration> Declarations { get; set; } = new List<IIrDeclaration>();
 
         public string Name { get; set; }
-        public List<IStatement> Statements { get; set; }
+        public List<IIrStatement> Statements { get; set; }
     }
 
     // var A = B;
-    public class VariableDeclaration : IStatement, IDeclaration
+    public class IrVariableDeclaration : IIrStatement, IIrDeclaration
     {
         public StatementKind StatementKind { get; } = StatementKind.VariableDeclaration;
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.VariableDeclaration;
 
         public string Name { get; set; }
-        public IExpression Initializer { get; set; }
+        public IIrExpression Initializer { get; set; }
     }
 
     // function A(...B) { C }
-    public class FunctionDeclaration : IStatement, IDeclaration
+    public class IrFunctionDeclaration : IIrStatement, IIrDeclaration
     {
         public StatementKind StatementKind { get; } = StatementKind.FunctionDeclaration;
         public DeclarationKind DeclarationKind { get; } = DeclarationKind.FunctionDeclaration;
 
         public string Name { get; set; }
         public List<string> Parameters { get; set; }
-        public Block FunctionBlock { get; set; }
+        public IrBlock FunctionBlock { get; set; }
     }
 
     // A = B;
-    public class AssignStatement : IStatement
+    public class IrAssignStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.AssignStatement;
 
-        public IExpression Target { get; set; }
-        public IExpression Content { get; set; }
+        public IIrExpression Target { get; set; }
+        public IIrExpression Content { get; set; }
     }
 
     // A++;
-    public class IncrementStatement : IStatement
+    public class IrIncrementStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.IncrementStatement;
 
-        public IExpression Target { get; set; }
+        public IIrExpression Target { get; set; }
     }
 
     // A--;
-    public class DecrementStatement : IStatement
+    public class IrDecrementStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.DecrementStatement;
 
-        public IExpression Target { get; set; }
+        public IIrExpression Target { get; set; }
     }
 
     // if (A) { B } else { C }
-    public class IfStatement : IStatement
+    public class IrIfStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.IfStatement;
 
-        public IExpression Condition { get; set; }
-        public Block ThenBlock { get; set; }
-        public Block ElseBlock { get; set; }
+        public IIrExpression Condition { get; set; }
+        public IrBlock ThenBlock { get; set; }
+        public IrBlock ElseBlock { get; set; }
     }
 
     // while (A) { B }
-    public class WhileStatement : IStatement
+    public class IrWhileStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.WhileStatement;
 
-        public IExpression Condition { get; set; }
-        public Block LoopBlock { get; set; }
+        public IIrExpression Condition { get; set; }
+        public IrBlock LoopBlock { get; set; }
     }
 
     // for (var A in B) { C }
-    public class ForStatement : IStatement
+    public class IrForStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ForStatement;
 
         public string VariableName { get; set; }
-        public IExpression Iterable { get; set; }
-        public Block LoopBlock { get; set; }
+        public IIrExpression Iterable { get; set; }
+        public IrBlock LoopBlock { get; set; }
     }
 
-    public class BreakStatement : IStatement
+    public class IrBreakStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.BreakStatement;
     }
 
-    public class ContinueStatement : IStatement
+    public class IrContinueStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ContinueStatement;
     }
 
-    public class ReturnStatement : IStatement
+    public class IrReturnStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ReturnStatement;
 
         public bool HasValue => Value != null;
-        public IExpression Value { get; set; }
+        public IIrExpression Value { get; set; }
     }
 
     // { }
-    public class Block : IStatement
+    public class IrBlock : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.Block;
 
         // semantics
-        public List<IDeclaration> Declarations { get; set; } = new List<IDeclaration>();
+        public List<IIrDeclaration> Declarations { get; set; } = new List<IIrDeclaration>();
 
-        public List<IStatement> Statements { get; set; }
+        public List<IIrStatement> Statements { get; set; }
     }
 
     // A;
-    public class ExpressionStatement : IStatement
+    public class IrExpressionStatement : IIrStatement
     {
         public StatementKind StatementKind { get; } = StatementKind.ExpressionStatement;
 
-        public IExpression Expression { get; set; }
+        public IIrExpression Expression { get; set; }
     }
 
     // Value
-    public class ValueExpression : IExpression
+    public class IrValueExpression : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.ValueExpression;
 
@@ -230,82 +230,82 @@ namespace Magro.Common.MiddleLevel
     }
 
     // Name
-    public class ReferenceExpression : IExpression
+    public class IrReferenceExpression : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.ReferenceExpression;
 
         // semantics
-        public IDeclaration ResolvedDeclaration { get; set; }
+        public IIrDeclaration ResolvedDeclaration { get; set; }
 
         public string Name { get; set; }
     }
 
     // Target.MemberName
-    public class MemberAccessExpression : IExpression
+    public class IrMemberAccessExpression : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.MemberAccessExpression;
 
-        public IExpression Target { get; set; }
+        public IIrExpression Target { get; set; }
         public string MemberName { get; set; }
     }
 
     // Target[...Indexes]
-    public class IndexAccessExpression : IExpression
+    public class IrIndexAccessExpression : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.IndexAccessExpression;
 
-        public IExpression Target { get; set; }
-        public List<IExpression> Indexes { get; set; }
+        public IIrExpression Target { get; set; }
+        public List<IIrExpression> Indexes { get; set; }
     }
 
     // Target(...Arguments)
-    public class CallFuncExpression : IExpression
+    public class IrCallFuncExpression : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.CallFuncExpression;
 
-        public IExpression Target { get; set; }
-        public List<IExpression> Arguments { get; set; }
+        public IIrExpression Target { get; set; }
+        public List<IIrExpression> Arguments { get; set; }
     }
 
-    public class NotOperator : IExpression
+    public class IrNotOperator : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.NotOperator;
 
-        public IExpression Target { get; set; }
+        public IIrExpression Target { get; set; }
     }
 
-    public class SignExpression : IExpression
+    public class IrSignExpression : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.SignExpression;
 
         public SignKind SignKind { get; set; }
-        public IExpression Target { get; set; }
+        public IIrExpression Target { get; set; }
     }
 
-    public class RelationalOperator : IExpression
+    public class IrRelationalOperator : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.RelationalOperator;
 
         public RelationalOperatorKind RelationalOperatorKind { get; set; }
-        public IExpression Left { get; set; }
-        public IExpression Right { get; set; }
+        public IIrExpression Left { get; set; }
+        public IIrExpression Right { get; set; }
     }
 
-    public class LogicOperator : IExpression
+    public class IrLogicOperator : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.LogicOperator;
 
         public LogicOperatorKind LogicOperatorKind { get; set; }
-        public IExpression Left { get; set; }
-        public IExpression Right { get; set; }
+        public IIrExpression Left { get; set; }
+        public IIrExpression Right { get; set; }
     }
 
-    public class MathOperator : IExpression
+    public class IrMathOperator : IIrExpression
     {
         public ExpressionKind ExpressionKind { get; } = ExpressionKind.MathOperator;
 
         public MathOperatorKind MathOperatorKind { get; set; }
-        public IExpression Left { get; set; }
-        public IExpression Right { get; set; }
+        public IIrExpression Left { get; set; }
+        public IIrExpression Right { get; set; }
     }
 }

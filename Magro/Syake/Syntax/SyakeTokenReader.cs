@@ -5,18 +5,18 @@ using System.Text;
 
 namespace Magro.Syake.Syntax
 {
-    internal class Scanner
+    internal class SyakeTokenReader
     {
         private CharStream Stream;
-        private List<Token> Tokens = new List<Token>();
+        private List<SyakeToken> Tokens = new List<SyakeToken>();
 
-        public Scanner(StreamReader reader)
+        public SyakeTokenReader(StreamReader reader)
         {
             Stream = new CharStream(reader);
             Tokens.Add(ReadOne());
         }
 
-        public Token GetToken()
+        public SyakeToken GetToken()
         {
             return Tokens[0];
         }
@@ -75,7 +75,7 @@ namespace Magro.Syake.Syntax
             }
         }
 
-        public Token Peek(int offset)
+        public SyakeToken Peek(int offset)
         {
             while (Tokens.Count <= offset)
             {
@@ -85,14 +85,14 @@ namespace Magro.Syake.Syntax
             return Tokens[offset];
         }
 
-        private Token ReadOne()
+        private SyakeToken ReadOne()
         {
             while (true)
             {
                 if (Stream.GetChar() == null)
                 {
                     var location = Stream.GetLocation();
-                    return new Token(TokenKind.EOF, location, location);
+                    return new SyakeToken(TokenKind.EOF, location, location);
                 }
 
                 // skip spacing
@@ -108,107 +108,107 @@ namespace Magro.Syake.Syntax
                 {
                     case '[':
                         Stream.Next();
-                        return new Token(TokenKind.OpenBracket, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.OpenBracket, begin, Stream.GetLocation());
 
                     case ']':
                         Stream.Next();
-                        return new Token(TokenKind.CloseBracket, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.CloseBracket, begin, Stream.GetLocation());
 
                     case '{':
                         Stream.Next();
-                        return new Token(TokenKind.OpenBrace, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.OpenBrace, begin, Stream.GetLocation());
 
                     case '}':
                         Stream.Next();
-                        return new Token(TokenKind.CloseBrace, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.CloseBrace, begin, Stream.GetLocation());
 
                     case '(':
                         Stream.Next();
-                        return new Token(TokenKind.OpenParen, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.OpenParen, begin, Stream.GetLocation());
 
                     case ')':
                         Stream.Next();
-                        return new Token(TokenKind.CloseParen, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.CloseParen, begin, Stream.GetLocation());
 
                     case ',':
                         Stream.Next();
-                        return new Token(TokenKind.Comma, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Comma, begin, Stream.GetLocation());
 
                     case '.':
                         Stream.Next();
-                        return new Token(TokenKind.Dot, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Dot, begin, Stream.GetLocation());
 
                     case ';':
                         Stream.Next();
-                        return new Token(TokenKind.SemiCollon, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.SemiCollon, begin, Stream.GetLocation());
 
                     case '=':
                         Stream.Next();
                         if (Stream.GetChar() == '=')
                         {
                             Stream.Next();
-                            return new Token(TokenKind.Equal2, begin, Stream.GetLocation());
+                            return new SyakeToken(TokenKind.Equal2, begin, Stream.GetLocation());
                         }
-                        return new Token(TokenKind.Equal, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Equal, begin, Stream.GetLocation());
 
                     case '>':
                         Stream.Next();
                         if (Stream.GetChar() == '=')
                         {
                             Stream.Next();
-                            return new Token(TokenKind.GtEq, begin, Stream.GetLocation());
+                            return new SyakeToken(TokenKind.GtEq, begin, Stream.GetLocation());
                         }
-                        return new Token(TokenKind.Gt, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Gt, begin, Stream.GetLocation());
 
                     case '<':
                         Stream.Next();
                         if (Stream.GetChar() == '=')
                         {
                             Stream.Next();
-                            return new Token(TokenKind.LtEq, begin, Stream.GetLocation());
+                            return new SyakeToken(TokenKind.LtEq, begin, Stream.GetLocation());
                         }
-                        return new Token(TokenKind.Lt, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Lt, begin, Stream.GetLocation());
 
                     case '!':
                         Stream.Next();
-                        return new Token(TokenKind.Not, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Not, begin, Stream.GetLocation());
 
                     case '+':
                         Stream.Next();
                         if (Stream.GetChar() == '+')
                         {
                             Stream.Next();
-                            return new Token(TokenKind.Plus2, begin, Stream.GetLocation());
+                            return new SyakeToken(TokenKind.Plus2, begin, Stream.GetLocation());
                         }
-                        return new Token(TokenKind.Plus, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Plus, begin, Stream.GetLocation());
 
                     case '-':
                         Stream.Next();
                         if (Stream.GetChar() == '-')
                         {
                             Stream.Next();
-                            return new Token(TokenKind.Minus2, begin, Stream.GetLocation());
+                            return new SyakeToken(TokenKind.Minus2, begin, Stream.GetLocation());
                         }
-                        return new Token(TokenKind.Minus, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Minus, begin, Stream.GetLocation());
 
                     case '*':
                         Stream.Next();
-                        return new Token(TokenKind.Astarisk, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Astarisk, begin, Stream.GetLocation());
 
                     case '/':
                         Stream.Next();
-                        return new Token(TokenKind.Slash, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Slash, begin, Stream.GetLocation());
 
                     case '%':
                         Stream.Next();
-                        return new Token(TokenKind.Percent, begin, Stream.GetLocation());
+                        return new SyakeToken(TokenKind.Percent, begin, Stream.GetLocation());
 
                     case '&':
                         Stream.Next();
                         if (Stream.GetChar() == '&')
                         {
                             Stream.Next();
-                            return new Token(TokenKind.And2, begin, Stream.GetLocation());
+                            return new SyakeToken(TokenKind.And2, begin, Stream.GetLocation());
                         }
                         throw new ApplicationException($"Invalid character ({begin})");
 
@@ -217,12 +217,12 @@ namespace Magro.Syake.Syntax
                         if (Stream.GetChar() == '|')
                         {
                             Stream.Next();
-                            return new Token(TokenKind.Or2, begin, Stream.GetLocation());
+                            return new SyakeToken(TokenKind.Or2, begin, Stream.GetLocation());
                         }
                         throw new ApplicationException($"Invalid character ({begin})");
                 }
 
-                Token token;
+                SyakeToken token;
 
                 if (TryReadString(out token))
                 {
@@ -243,7 +243,7 @@ namespace Magro.Syake.Syntax
             }
         }
 
-        private bool TryReadString(out Token token)
+        private bool TryReadString(out SyakeToken token)
         {
             token = null;
 
@@ -273,7 +273,7 @@ namespace Magro.Syake.Syntax
             if (buf.Length > 0)
             {
                 buf.ToString();
-                token = new Token(TokenKind.String, begin, Stream.GetLocation())
+                token = new SyakeToken(TokenKind.String, begin, Stream.GetLocation())
                 {
                     Content = buf.ToString()
                 };
@@ -285,7 +285,7 @@ namespace Magro.Syake.Syntax
             }
         }
 
-        private bool TryReadNumber(out Token token)
+        private bool TryReadNumber(out SyakeToken token)
         {
             token = null;
 
@@ -331,7 +331,7 @@ namespace Magro.Syake.Syntax
             if (buf.Length > 0)
             {
                 buf.ToString();
-                token = new Token(TokenKind.Number, begin, Stream.GetLocation())
+                token = new SyakeToken(TokenKind.Number, begin, Stream.GetLocation())
                 {
                     Content = buf.ToString()
                 };
@@ -343,7 +343,7 @@ namespace Magro.Syake.Syntax
             }
         }
 
-        private bool TryReadWord(out Token token)
+        private bool TryReadWord(out SyakeToken token)
         {
             token = null;
 
@@ -360,7 +360,7 @@ namespace Magro.Syake.Syntax
 
             if (buf.Length > 0)
             {
-                token = new Token(TokenKind.Word, begin, Stream.GetLocation())
+                token = new SyakeToken(TokenKind.Word, begin, Stream.GetLocation())
                 {
                     Content = buf.ToString()
                 };

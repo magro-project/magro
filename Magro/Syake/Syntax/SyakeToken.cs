@@ -1,4 +1,4 @@
-﻿namespace Magro.Syake.Syntax
+﻿namespace Magro.Syake
 {
     internal class SyakeToken
     {

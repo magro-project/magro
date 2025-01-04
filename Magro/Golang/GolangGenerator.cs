@@ -5,7 +5,7 @@ namespace Magro.Golang.GolangAst
 {
     internal class GolangGenerator
     {
-        public void Generate(ModuleDeclaration module)
+        public void Generate(IrModuleDeclaration module)
         {
 
         }

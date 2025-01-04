@@ -6,25 +6,27 @@ namespace Magro.Ikura
     {
         public string Name { get; set; }
         public List<IkVariableDeclaration> Variables { get; set; }
-        public List<IIkStatement> Statements { get; set; }
+        public List<IkStatement> Statements { get; set; }
     }
 
     internal class IkVariableDeclaration
     {
         public string Name { get; set; }
-        public IIkType Type { get; set; }
+        public IkType Type { get; set; }
     }
 
     internal class IkFunctionDeclaration
     {
         public string Name { get; set; }
-        public IIkType ReturnType { get; set; }
-        public List<IIkType> ParameterTypeList { get; set; }
+        public IkType ReturnType { get; set; }
+        public List<IkType> ParameterTypeList { get; set; }
     }
 
+    // -------------------------------------------------------------------------------------------
     // statement
+    // -------------------------------------------------------------------------------------------
 
-    internal interface IIkStatement
+    internal interface IkStatement
     {
         IkStatementKind StatementKind { get; }
     }
@@ -35,25 +37,25 @@ namespace Magro.Ikura
         CallFunction,
     }
 
-    internal class IkAssign : IIkStatement
+    internal class IkAssign : IkStatement
     {
         public IkStatementKind StatementKind { get; } = IkStatementKind.Assign;
-
         public IkVariableDeclaration Target { get; set; }
-        public IIkValue Value { get; set; }
+        public IkValue Value { get; set; }
     }
 
-    internal class IkCallFunction : IIkStatement
+    internal class IkCallFunction : IkStatement
     {
         public IkStatementKind StatementKind { get; } = IkStatementKind.CallFunction;
-
         public IkVariableDeclaration ResultTarget { get; set; }
-        public List<IIkValue> ArgumentList { get; set; }
+        public List<IkValue> ArgumentList { get; set; }
     }
 
+    // -------------------------------------------------------------------------------------------
     // value
+    // -------------------------------------------------------------------------------------------
 
-    internal interface IIkValue
+    internal interface IkValue
     {
         IkValueKind ValueKind { get; }
     }
@@ -73,33 +75,32 @@ namespace Magro.Ikura
         Null = 16,
     }
 
-    internal class IkLiteralValue : IIkValue
+    internal class IkLiteralValue : IkValue
     {
         public IkValueKind ValueKind { get; } = IkValueKind.Literal;
-
         public IkItemKind ItemKind { get; set; }
         public object Source { get; set; }
     }
 
-    internal class IkListValue : IIkValue
+    internal class IkListValue : IkValue
     {
         public IkValueKind ValueKind { get; } = IkValueKind.List;
-
         public IkItemKind ItemKind { get; set; }
         public List<object> Source { get; set; }
     }
 
-    internal class IkTableValue : IIkValue
+    internal class IkTableValue : IkValue
     {
         public IkValueKind ValueKind { get; } = IkValueKind.Table;
-
         public IkItemKind ItemKind { get; set; }
         public List<List<object>> Source { get; set; }
     }
 
-    // types
+    // -------------------------------------------------------------------------------------------
+    // type
+    // -------------------------------------------------------------------------------------------
 
-    internal interface IIkType
+    internal interface IkType
     {
         IkTypeKind TypeKind { get; }
     }
@@ -111,10 +112,9 @@ namespace Magro.Ikura
         Table,
     }
 
-    internal class IkLiteralType : IIkType
+    internal class IkLiteralType : IkType
     {
         public IkTypeKind TypeKind { get; } = IkTypeKind.Literal;
-
         public IkLiteralTypeKind LiteralTypeKind { get; set; }
     }
 
@@ -125,17 +125,15 @@ namespace Magro.Ikura
         Boolean,
     }
 
-    internal class IkListType : IIkType
+    internal class IkListType : IkType
     {
         public IkTypeKind TypeKind { get; } = IkTypeKind.List;
-
-        public IIkType ItemType { get; set; }
+        public IkType ItemType { get; set; }
     }
 
-    internal class IkTableType : IIkType
+    internal class IkTableType : IkType
     {
         public IkTypeKind TypeKind { get; } = IkTypeKind.Table;
-
-        public IIkType ItemType { get; set; }
+        public IkType ItemType { get; set; }
     }
 }

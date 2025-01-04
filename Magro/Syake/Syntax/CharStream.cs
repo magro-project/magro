@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Magro.Syake.Syntax
+namespace Magro.Syake
 {
     internal class CharStream
     {

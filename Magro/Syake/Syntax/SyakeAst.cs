@@ -1,25 +1,39 @@
 ﻿using System.Collections.Generic;
 
-namespace Magro.Syake.Syntax
+namespace Magro.Syake
 {
-    internal interface ISyStatement
+    internal class SyModuleDeclaration : SyDeclaration
     {
-        StatementKind StatementKind { get; }
+        public SyDeclarationKind DeclarationKind { get; } = SyDeclarationKind.ModuleDeclaration;
+        public string Name { get; set; }
+        public List<SyStatement> Statements { get; set; }
+        // semantics
+        public List<SyDeclaration> Declarations { get; set; } = new List<SyDeclaration>();
     }
 
-    internal interface ISyDeclaration
+    internal interface SyDeclaration
     {
-        DeclarationKind DeclarationKind { get; }
-
+        SyDeclarationKind DeclarationKind { get; }
         string Name { get; set; }
     }
 
-    internal interface ISyExpression
+    internal enum SyDeclarationKind
     {
-        ExpressionKind ExpressionKind { get; }
+        ModuleDeclaration,
+        FunctionDeclaration,
+        VariableDeclaration,
     }
 
-    internal enum StatementKind
+    // -------------------------------------------------------------------------------------------
+    // statement
+    // -------------------------------------------------------------------------------------------
+
+    internal interface SyStatement
+    {
+        SyStatementKind StatementKind { get; }
+    }
+
+    internal enum SyStatementKind
     {
         VariableDeclaration,
         FunctionDeclaration,
@@ -36,14 +50,126 @@ namespace Magro.Syake.Syntax
         ExpressionStatement,
     }
 
-    internal enum DeclarationKind
+    // var A = B;
+    internal class SyVariableDeclaration : SyStatement, SyDeclaration
     {
-        ModuleDeclaration,
-        FunctionDeclaration,
-        VariableDeclaration,
+        public SyStatementKind StatementKind { get; } = SyStatementKind.VariableDeclaration;
+        public SyDeclarationKind DeclarationKind { get; } = SyDeclarationKind.VariableDeclaration;
+        public SyTypeKind TypeKind { get; set; }
+        public string Name { get; set; }
+        public SyExpression Initializer { get; set; }
     }
 
-    internal enum ExpressionKind
+    // function A(...B) { C }
+    internal class SyFunctionDeclaration : SyStatement, SyDeclaration
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.FunctionDeclaration;
+        public SyDeclarationKind DeclarationKind { get; } = SyDeclarationKind.FunctionDeclaration;
+        public SyTypeKind ReturnTypeKind { get; set; }
+        public string Name { get; set; }
+        public List<string> Parameters { get; set; }
+        public List<SyTypeKind> ParameterTypeKindList { get; set; }
+        public SyBlock FunctionBlock { get; set; }
+    }
+
+    internal enum SyTypeKind
+    {
+        Number,
+        String,
+        Boolean,
+    }
+
+    // A = B;
+    internal class SyAssignStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.AssignStatement;
+        public SyExpression Target { get; set; }
+        public SyExpression Content { get; set; }
+    }
+
+    // A++;
+    internal class SyIncrementStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.IncrementStatement;
+        public SyExpression Target { get; set; }
+    }
+
+    // A--;
+    internal class SyDecrementStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.DecrementStatement;
+        public SyExpression Target { get; set; }
+    }
+
+    // if (A) { B } else { C }
+    internal class SyIfStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.IfStatement;
+        public SyExpression Condition { get; set; }
+        public SyBlock ThenBlock { get; set; }
+        public SyBlock ElseBlock { get; set; }
+    }
+
+    // while (A) { B }
+    internal class SyWhileStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.WhileStatement;
+        public SyExpression Condition { get; set; }
+        public SyBlock LoopBlock { get; set; }
+    }
+
+    // for (var A in B) { C }
+    internal class SyForStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.ForStatement;
+        public string VariableName { get; set; }
+        public SyExpression Iterable { get; set; }
+        public SyBlock LoopBlock { get; set; }
+    }
+
+    internal class SyBreakStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.BreakStatement;
+    }
+
+    internal class SyContinueStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.ContinueStatement;
+    }
+
+    internal class SyReturnStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.ReturnStatement;
+        public bool HasValue => Value != null;
+        public SyExpression Value { get; set; }
+    }
+
+    // { }
+    internal class SyBlock : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.Block;
+        public List<SyStatement> Statements { get; set; }
+        // semantics
+        public List<SyDeclaration> Declarations { get; set; } = new List<SyDeclaration>();
+    }
+
+    // A;
+    internal class SyExpressionStatement : SyStatement
+    {
+        public SyStatementKind StatementKind { get; } = SyStatementKind.ExpressionStatement;
+        public SyExpression Expression { get; set; }
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // expression
+    // -------------------------------------------------------------------------------------------
+
+    internal interface SyExpression
+    {
+        SyExpressionKind ExpressionKind { get; }
+    }
+
+    internal enum SyExpressionKind
     {
         ValueExpression,
         ReferenceExpression,
@@ -55,41 +181,18 @@ namespace Magro.Syake.Syntax
         RelationalOperator,
         LogicOperator,
         MathOperator,
+        GroupingExpression,
     }
 
-    internal enum RelationalOperatorKind
+    // Value
+    internal class SyValueExpression : SyExpression
     {
-        Equal,      // Left == Right
-        NotEqual,   // Left != Right
-        Gt,         // Left > Right
-        Lt,         // Left < Right
-        GtEq,       // Left >= Right
-        LtEq,       // Left <= Right
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.ValueExpression;
+        public SyValueKind ValueKind { get; set; }
+        public object Value { get; set; }
     }
 
-    internal enum LogicOperatorKind
-    {
-        And,    // Left && Right
-        Or,     // Left || Right
-    }
-
-    internal enum MathOperatorKind
-    {
-        Add,    // Left + Right
-        Sub,    // Left - Right
-        Mul,    // Left * Right
-        Div,    // Left / Right
-        Rem,    // Left % Right
-    }
-
-    internal enum TypeKind
-    {
-        Number,
-        String,
-        Boolean,
-    }
-
-    internal enum ValueKind
+    internal enum SyValueKind
     {
         Number,
         String,
@@ -97,224 +200,110 @@ namespace Magro.Syake.Syntax
         Null = 16,
     }
 
-    internal enum SignKind
-    {
-        Positive,
-        Negative,
-    }
-
-    internal class SyModuleDeclaration : ISyDeclaration
-    {
-        public DeclarationKind DeclarationKind { get; } = DeclarationKind.ModuleDeclaration;
-
-        // semantics
-        public List<ISyDeclaration> Declarations { get; set; } = new List<ISyDeclaration>();
-
-        public string Name { get; set; }
-        public List<ISyStatement> Statements { get; set; }
-    }
-
-    // var A = B;
-    internal class SyVariableDeclaration : ISyStatement, ISyDeclaration
-    {
-        public StatementKind StatementKind { get; } = StatementKind.VariableDeclaration;
-        public DeclarationKind DeclarationKind { get; } = DeclarationKind.VariableDeclaration;
-
-        public string Name { get; set; }
-        public TypeKind TypeKind { get; set; }
-        public ISyExpression Initializer { get; set; }
-    }
-
-    // function A(...B) { C }
-    internal class SyFunctionDeclaration : ISyStatement, ISyDeclaration
-    {
-        public StatementKind StatementKind { get; } = StatementKind.FunctionDeclaration;
-        public DeclarationKind DeclarationKind { get; } = DeclarationKind.FunctionDeclaration;
-
-        public string Name { get; set; }
-        public TypeKind ReturnTypeKind { get; set; }
-        public List<string> Parameters { get; set; }
-        public List<TypeKind> ParameterTypeKindList { get; set; }
-        public SyBlock FunctionBlock { get; set; }
-    }
-
-    // A = B;
-    internal class SyAssignStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.AssignStatement;
-
-        public ISyExpression Target { get; set; }
-        public ISyExpression Content { get; set; }
-    }
-
-    // A++;
-    internal class SyIncrementStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.IncrementStatement;
-
-        public ISyExpression Target { get; set; }
-    }
-
-    // A--;
-    internal class SyDecrementStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.DecrementStatement;
-
-        public ISyExpression Target { get; set; }
-    }
-
-    // if (A) { B } else { C }
-    internal class SyIfStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.IfStatement;
-
-        public ISyExpression Condition { get; set; }
-        public SyBlock ThenBlock { get; set; }
-        public SyBlock ElseBlock { get; set; }
-    }
-
-    // while (A) { B }
-    internal class SyWhileStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.WhileStatement;
-
-        public ISyExpression Condition { get; set; }
-        public SyBlock LoopBlock { get; set; }
-    }
-
-    // for (var A in B) { C }
-    internal class SyForStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.ForStatement;
-
-        public string VariableName { get; set; }
-        public ISyExpression Iterable { get; set; }
-        public SyBlock LoopBlock { get; set; }
-    }
-
-    internal class SyBreakStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.BreakStatement;
-    }
-
-    internal class SyContinueStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.ContinueStatement;
-    }
-
-    internal class SyReturnStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.ReturnStatement;
-
-        public bool HasValue => Value != null;
-        public ISyExpression Value { get; set; }
-    }
-
-    // { }
-    internal class SyBlock : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.Block;
-
-        // semantics
-        public List<ISyDeclaration> Declarations { get; set; } = new List<ISyDeclaration>();
-
-        public List<ISyStatement> Statements { get; set; }
-    }
-
-    // A;
-    internal class SyExpressionStatement : ISyStatement
-    {
-        public StatementKind StatementKind { get; } = StatementKind.ExpressionStatement;
-
-        public ISyExpression Expression { get; set; }
-    }
-
-    // Value
-    internal class SyValueExpression : ISyExpression
-    {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.ValueExpression;
-
-        public ValueKind ValueKind { get; set; }
-        public object Value { get; set; }
-    }
-
     // Name
-    internal class SyReferenceExpression : ISyExpression
+    internal class SyReferenceExpression : SyExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.ReferenceExpression;
-
-        // semantics
-        public ISyDeclaration ResolvedDeclaration { get; set; }
-
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.ReferenceExpression;
         public string Name { get; set; }
+        // semantics
+        public SyDeclaration ResolvedDeclaration { get; set; }
     }
 
     // Target.MemberName
-    internal class SyMemberAccessExpression : ISyExpression
+    internal class SyMemberAccessExpression : SyExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.MemberAccessExpression;
-
-        public ISyExpression Target { get; set; }
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.MemberAccessExpression;
+        public SyExpression Target { get; set; }
         public string MemberName { get; set; }
     }
 
     // Target[...Indexes]
-    internal class SyIndexAccessExpression : ISyExpression
+    internal class SyIndexAccessExpression : SyExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.IndexAccessExpression;
-
-        public ISyExpression Target { get; set; }
-        public List<ISyExpression> Indexes { get; set; }
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.IndexAccessExpression;
+        public SyExpression Target { get; set; }
+        public List<SyExpression> Indexes { get; set; }
     }
 
     // Target(...Arguments)
-    internal class SyCallFuncExpression : ISyExpression
+    internal class SyCallFuncExpression : SyExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.CallFuncExpression;
-
-        public ISyExpression Target { get; set; }
-        public List<ISyExpression> Arguments { get; set; }
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.CallFuncExpression;
+        public SyExpression Target { get; set; }
+        public List<SyExpression> Arguments { get; set; }
     }
 
-    internal class SyNotOperator : ISyExpression
+    internal class SyNotOperator : SyExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.NotOperator;
-
-        public ISyExpression Target { get; set; }
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.NotOperator;
+        public SyExpression Target { get; set; }
     }
 
-    internal class SySignExpression : ISyExpression
+    internal class SySignExpression : SyExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.SignExpression;
-
-        public SignKind SignKind { get; set; }
-        public ISyExpression Target { get; set; }
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.SignExpression;
+        public SySignKind SignKind { get; set; }
+        public SyExpression Target { get; set; }
     }
 
-    internal class SyRelationalOperator : ISyExpression
+    internal enum SySignKind
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.RelationalOperator;
-
-        public RelationalOperatorKind RelationalOperatorKind { get; set; }
-        public ISyExpression Left { get; set; }
-        public ISyExpression Right { get; set; }
+        Positive, // +
+        Negative, // -
     }
 
-    internal class SyLogicOperator : ISyExpression
+    internal class SyRelationalOperator : SyExpression
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.LogicOperator;
-
-        public LogicOperatorKind LogicOperatorKind { get; set; }
-        public ISyExpression Left { get; set; }
-        public ISyExpression Right { get; set; }
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.RelationalOperator;
+        public SyRelationalOperatorKind RelationalOperatorKind { get; set; }
+        public SyExpression Left { get; set; }
+        public SyExpression Right { get; set; }
     }
 
-    internal class SyMathOperator : ISyExpression
+    internal enum SyRelationalOperatorKind
     {
-        public ExpressionKind ExpressionKind { get; } = ExpressionKind.MathOperator;
+        Equal,      // ==
+        NotEqual,   // !=
+        Gt,         // >
+        Lt,         // <
+        GtEq,       // >=
+        LtEq,       // <=
+    }
 
-        public MathOperatorKind MathOperatorKind { get; set; }
-        public ISyExpression Left { get; set; }
-        public ISyExpression Right { get; set; }
+    internal class SyLogicOperator : SyExpression
+    {
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.LogicOperator;
+        public SyLogicOperatorKind LogicOperatorKind { get; set; }
+        public SyExpression Left { get; set; }
+        public SyExpression Right { get; set; }
+    }
+
+    internal enum SyLogicOperatorKind
+    {
+        And,    // &&
+        Or,     // ||
+    }
+
+    internal class SyMathOperator : SyExpression
+    {
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.MathOperator;
+        public SyMathOperatorKind MathOperatorKind { get; set; }
+        public SyExpression Left { get; set; }
+        public SyExpression Right { get; set; }
+    }
+
+    internal enum SyMathOperatorKind
+    {
+        Add,    // +
+        Sub,    // -
+        Mul,    // *
+        Div,    // /
+        Rem,    // %
+    }
+
+    internal class SyGroupingExpression : SyExpression
+    {
+        public SyExpressionKind ExpressionKind { get; } = SyExpressionKind.GroupingExpression;
+        public SyExpression Expression { get; set; }
     }
 }

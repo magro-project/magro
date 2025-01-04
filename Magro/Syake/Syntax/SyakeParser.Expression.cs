@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Magro.Syake.Syntax
+namespace Magro.Syake
 {
     internal partial class SyakeParser
     {
-        public ISyExpression ParseExpression(SyakeTokenReader reader)
+        public SyExpression ParseExpression(SyakeTokenReader reader)
         {
             return ParsePratt(reader, 0);
         }
@@ -33,12 +33,12 @@ namespace Magro.Syake.Syntax
             new InfixOperator(TokenKind.Or2,             6,  7),
         };
 
-        private ISyExpression ParsePratt(SyakeTokenReader reader, int minimumBindPower)
+        private SyExpression ParsePratt(SyakeTokenReader reader, int minimumBindPower)
         {
             // pratt parsing
             // https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
 
-            ISyExpression left;
+            SyExpression left;
 
             // find prefix operator
             var prefix = (PrefixOperator)Operators.Find(x =>
@@ -88,7 +88,7 @@ namespace Magro.Syake.Syntax
             return left;
         }
 
-        private ISyExpression ParseAtom(SyakeTokenReader reader)
+        private SyExpression ParseAtom(SyakeTokenReader reader)
         {
             if (reader.Is(TokenKind.Number))
             {
@@ -97,7 +97,7 @@ namespace Magro.Syake.Syntax
 
                 return new SyValueExpression()
                 {
-                    ValueKind = ValueKind.Number,
+                    ValueKind = SyValueKind.Number,
                     Value = double.Parse(value),
                 };
             }
@@ -109,7 +109,7 @@ namespace Magro.Syake.Syntax
 
                 return new SyValueExpression()
                 {
-                    ValueKind = ValueKind.String,
+                    ValueKind = SyValueKind.String,
                     Value = value,
                 };
             }
@@ -120,7 +120,7 @@ namespace Magro.Syake.Syntax
 
                 return new SyValueExpression()
                 {
-                    ValueKind = ValueKind.Boolean,
+                    ValueKind = SyValueKind.Boolean,
                     Value = true,
                 };
             }
@@ -131,7 +131,7 @@ namespace Magro.Syake.Syntax
 
                 return new SyValueExpression()
                 {
-                    ValueKind = ValueKind.Boolean,
+                    ValueKind = SyValueKind.Boolean,
                     Value = false,
                 };
             }
@@ -142,7 +142,7 @@ namespace Magro.Syake.Syntax
 
                 return new SyValueExpression()
                 {
-                    ValueKind = ValueKind.Null,
+                    ValueKind = SyValueKind.Null,
                     Value = null,
                 };
             }
@@ -166,13 +166,16 @@ namespace Magro.Syake.Syntax
                 reader.Expect(TokenKind.CloseParen);
                 reader.Next();
 
-                return expression;
+                return new SyGroupingExpression()
+                {
+                    Expression = expression,
+                };
             }
 
             throw new ApplicationException("Unexpected token " + reader.GetToken());
         }
 
-        private ISyExpression ParsePrefix(SyakeTokenReader reader)
+        private SyExpression ParsePrefix(SyakeTokenReader reader)
         {
             var opTokenKind = reader.GetTokenKind();
             reader.Next();
@@ -190,7 +193,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SySignExpression()
                 {
-                    SignKind = SignKind.Positive,
+                    SignKind = SySignKind.Positive,
                     Target = target,
                 };
             }
@@ -199,7 +202,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SySignExpression()
                 {
-                    SignKind = SignKind.Negative,
+                    SignKind = SySignKind.Negative,
                     Target = target,
                 };
             }
@@ -207,7 +210,7 @@ namespace Magro.Syake.Syntax
             throw new ApplicationException("Unexpected token " + reader.GetToken());
         }
 
-        private ISyExpression ParseInfix(SyakeTokenReader reader, ISyExpression left, int minimumBindPower)
+        private SyExpression ParseInfix(SyakeTokenReader reader, SyExpression left, int minimumBindPower)
         {
             var opTokenKind = reader.GetTokenKind();
             reader.Next();
@@ -217,7 +220,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyMathOperator()
                 {
-                    MathOperatorKind = MathOperatorKind.Add,
+                    MathOperatorKind = SyMathOperatorKind.Add,
                     Left = left,
                     Right = right,
                 };
@@ -227,7 +230,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyMathOperator()
                 {
-                    MathOperatorKind = MathOperatorKind.Sub,
+                    MathOperatorKind = SyMathOperatorKind.Sub,
                     Left = left,
                     Right = right,
                 };
@@ -237,7 +240,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyMathOperator()
                 {
-                    MathOperatorKind = MathOperatorKind.Mul,
+                    MathOperatorKind = SyMathOperatorKind.Mul,
                     Left = left,
                     Right = right,
                 };
@@ -247,7 +250,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyMathOperator()
                 {
-                    MathOperatorKind = MathOperatorKind.Div,
+                    MathOperatorKind = SyMathOperatorKind.Div,
                     Left = left,
                     Right = right,
                 };
@@ -257,7 +260,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyMathOperator()
                 {
-                    MathOperatorKind = MathOperatorKind.Rem,
+                    MathOperatorKind = SyMathOperatorKind.Rem,
                     Left = left,
                     Right = right,
                 };
@@ -267,7 +270,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyRelationalOperator()
                 {
-                    RelationalOperatorKind = RelationalOperatorKind.Lt,
+                    RelationalOperatorKind = SyRelationalOperatorKind.Lt,
                     Left = left,
                     Right = right,
                 };
@@ -277,7 +280,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyRelationalOperator()
                 {
-                    RelationalOperatorKind = RelationalOperatorKind.LtEq,
+                    RelationalOperatorKind = SyRelationalOperatorKind.LtEq,
                     Left = left,
                     Right = right,
                 };
@@ -287,7 +290,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyRelationalOperator()
                 {
-                    RelationalOperatorKind = RelationalOperatorKind.Gt,
+                    RelationalOperatorKind = SyRelationalOperatorKind.Gt,
                     Left = left,
                     Right = right,
                 };
@@ -297,7 +300,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyRelationalOperator()
                 {
-                    RelationalOperatorKind = RelationalOperatorKind.GtEq,
+                    RelationalOperatorKind = SyRelationalOperatorKind.GtEq,
                     Left = left,
                     Right = right,
                 };
@@ -307,7 +310,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyRelationalOperator()
                 {
-                    RelationalOperatorKind = RelationalOperatorKind.Equal,
+                    RelationalOperatorKind = SyRelationalOperatorKind.Equal,
                     Left = left,
                     Right = right,
                 };
@@ -317,7 +320,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyRelationalOperator()
                 {
-                    RelationalOperatorKind = RelationalOperatorKind.NotEqual,
+                    RelationalOperatorKind = SyRelationalOperatorKind.NotEqual,
                     Left = left,
                     Right = right,
                 };
@@ -327,7 +330,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyLogicOperator()
                 {
-                    LogicOperatorKind = LogicOperatorKind.And,
+                    LogicOperatorKind = SyLogicOperatorKind.And,
                     Left = left,
                     Right = right,
                 };
@@ -337,7 +340,7 @@ namespace Magro.Syake.Syntax
             {
                 return new SyLogicOperator()
                 {
-                    LogicOperatorKind = LogicOperatorKind.Or,
+                    LogicOperatorKind = SyLogicOperatorKind.Or,
                     Left = left,
                     Right = right,
                 };
@@ -346,13 +349,13 @@ namespace Magro.Syake.Syntax
             throw new ApplicationException("Unexpected token " + reader.GetToken());
         }
 
-        private ISyExpression ParsePostfix(SyakeTokenReader reader, ISyExpression expr)
+        private SyExpression ParsePostfix(SyakeTokenReader reader, SyExpression expr)
         {
             if (reader.Is(TokenKind.OpenParen))
             {
                 reader.Next();
 
-                var arguments = new List<ISyExpression>();
+                var arguments = new List<SyExpression>();
                 while (!reader.Is(TokenKind.CloseParen))
                 {
                     arguments.Add(ParseExpression(reader));
@@ -381,7 +384,7 @@ namespace Magro.Syake.Syntax
             {
                 reader.Next();
 
-                var indexes = new List<ISyExpression>();
+                var indexes = new List<SyExpression>();
                 while (!reader.Is(TokenKind.CloseBracket))
                 {
                     indexes.Add(ParseExpression(reader));

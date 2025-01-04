@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Magro.Syake.Syntax
+namespace Magro.Syake
 {
     internal class SyakeTokenReader
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Magro.Syake.Syntax
+namespace Magro.Syake
 {
     internal partial class SyakeParser
     {
-        public List<ISyStatement> ParseStatement(SyakeTokenReader reader)
+        public List<SyStatement> ParseStatement(SyakeTokenReader reader)
         {
             if (reader.Is("function"))
             {
@@ -16,7 +16,7 @@ namespace Magro.Syake.Syntax
                 var parameters = ParseParameters(reader);
                 var block = ParseBlock(reader);
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyFunctionDeclaration()
                     {
@@ -31,14 +31,14 @@ namespace Magro.Syake.Syntax
             {
                 reader.Next();
 
-                var statements = new List<ISyStatement>();
+                var statements = new List<SyStatement>();
                 while (true)
                 {
                     reader.Expect(TokenKind.Word);
                     var name = reader.GetTokenContent();
                     reader.Next();
 
-                    ISyExpression initializer = null;
+                    SyExpression initializer = null;
                     if (reader.Is(TokenKind.Equal))
                     {
                         reader.Next();
@@ -110,7 +110,7 @@ namespace Magro.Syake.Syntax
                     }
                 }
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyIfStatement()
                     {
@@ -144,7 +144,7 @@ namespace Magro.Syake.Syntax
                     };
                 }
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyWhileStatement()
                     {
@@ -184,7 +184,7 @@ namespace Magro.Syake.Syntax
                     };
                 }
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyForStatement()
                     {
@@ -201,7 +201,7 @@ namespace Magro.Syake.Syntax
                 reader.Expect(TokenKind.SemiCollon);
                 reader.Next();
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyBreakStatement()
                 };
@@ -213,7 +213,7 @@ namespace Magro.Syake.Syntax
                 reader.Expect(TokenKind.SemiCollon);
                 reader.Next();
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyContinueStatement()
                 };
@@ -223,7 +223,7 @@ namespace Magro.Syake.Syntax
             {
                 reader.Next();
 
-                ISyExpression value = null;
+                SyExpression value = null;
                 if (!reader.Is(TokenKind.SemiCollon))
                 {
                     value = ParseExpression(reader);
@@ -232,7 +232,7 @@ namespace Magro.Syake.Syntax
                 reader.Expect(TokenKind.SemiCollon);
                 reader.Next();
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyReturnStatement()
                     {
@@ -248,7 +248,7 @@ namespace Magro.Syake.Syntax
             {
                 reader.Next();
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyExpressionStatement()
                     {
@@ -265,7 +265,7 @@ namespace Magro.Syake.Syntax
                 reader.Expect(TokenKind.SemiCollon);
                 reader.Next();
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyAssignStatement()
                     {
@@ -282,7 +282,7 @@ namespace Magro.Syake.Syntax
                 reader.Expect(TokenKind.SemiCollon);
                 reader.Next();
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyIncrementStatement()
                     {
@@ -298,7 +298,7 @@ namespace Magro.Syake.Syntax
                 reader.Expect(TokenKind.SemiCollon);
                 reader.Next();
 
-                return new List<ISyStatement>()
+                return new List<SyStatement>()
                 {
                     new SyDecrementStatement()
                     {
@@ -340,7 +340,7 @@ namespace Magro.Syake.Syntax
             reader.Expect(TokenKind.OpenBrace);
             reader.Next();
 
-            var statements = new List<ISyStatement>();
+            var statements = new List<SyStatement>();
             while (!reader.Is(TokenKind.CloseBrace))
             {
                 statements.AddRange(ParseStatement(reader));

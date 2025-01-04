@@ -73,6 +73,7 @@
     <Compile Include="Ir\IrNode.cs" />
     <Compile Include="Serializer\SerializerContext.cs" />
     <Compile Include="Syake\Syntax\CharStream.cs" />
+    <Compile Include="Ir\IrConverter.cs" />
     <Compile Include="Syake\Syntax\SyakeParser.Expression.cs" />
     <Compile Include="Syake\Syntax\Location.cs" />
     <Compile Include="Syake\Syntax\SyakeAst.cs" />

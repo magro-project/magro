@@ -1,4 +1,7 @@
-﻿using Magro.Syake.Syntax;
+﻿using Magro.Golang.GolangAst;
+using Magro.Ir;
+using Magro.Syake;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -71,6 +74,14 @@ namespace Magro
             {
                 module = parser.Parse("main", reader);
             }
+
+            var converter = new IrConverter();
+            var irModule = converter.ConvertModule(module);
+
+            var codegen = new GolangGenerator();
+            var goCode = codegen.Generate(irModule);
+
+            Console.WriteLine(goCode);
 
             //if (!File.Exists("runtime.exe"))
             //{

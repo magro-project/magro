@@ -68,15 +68,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Ikura\IkuraAst.cs" />
+    <Compile Include="Ikura\IkuraTree.cs" />
     <Compile Include="Golang\GolangGenerator.cs" />
-    <Compile Include="Ir\IrNode.cs" />
+    <Compile Include="Ir\IrTree.cs" />
     <Compile Include="Serializer\SerializerContext.cs" />
     <Compile Include="Syake\Syntax\CharStream.cs" />
     <Compile Include="Ir\IrConverter.cs" />
     <Compile Include="Syake\Syntax\SyakeParser.Expression.cs" />
     <Compile Include="Syake\Syntax\Location.cs" />
-    <Compile Include="Syake\Syntax\SyakeAst.cs" />
+    <Compile Include="Syake\Syntax\SyakeTree.cs" />
     <Compile Include="Syake\Syntax\SyakeParser.cs" />
     <Compile Include="Syake\Syntax\SyakeTokenReader.cs" />
     <Compile Include="Syake\Syntax\SyakeParser.Statement.cs" />

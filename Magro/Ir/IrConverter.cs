@@ -9,7 +9,7 @@ namespace Magro.Ir
     {
         // from syake
 
-        public IrModuleDeclaration Convert(SyModuleDeclaration module)
+        public IrModuleDeclaration ConvertModule(SyModuleDeclaration module)
         {
             var statements = new List<IrStatement>();
             foreach (var statement in module.Statements)
@@ -36,7 +36,7 @@ namespace Magro.Ir
 
         // from ikura
 
-        public IrModuleDeclaration Convert(IkModuleDeclaration module)
+        public IrModuleDeclaration ConvertModule(IkModuleDeclaration module)
         {
             var statements = new List<IrStatement>();
             foreach (var statement in module.Statements)

@@ -1,1 +1,1 @@
-var abc = 1 + 2;
+var abc = 1;

@@ -1,15 +1,15 @@
 ﻿using System.IO;
 
-namespace Magro.Syake.Syntax
+namespace Magro.Compiler
 {
-    internal class CharStream
+    internal class CodeReader
     {
         private StreamReader Reader;
         private int Line { get; set; }
         private int Column { get; set; }
         private char? CurrentChar { get; set; }
 
-        public CharStream(StreamReader reader)
+        public CodeReader(StreamReader reader)
         {
             Reader = reader;
             Line = 1;
@@ -22,9 +22,9 @@ namespace Magro.Syake.Syntax
             return CurrentChar;
         }
 
-        public Location GetLocation()
+        public CodeLocation GetLocation()
         {
-            return new Location(Line, Column);
+            return new CodeLocation(Line, Column);
         }
 
         public void Next()

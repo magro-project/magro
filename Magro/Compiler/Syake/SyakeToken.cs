@@ -1,13 +1,13 @@
-﻿namespace Magro.Syake.Syntax
+﻿namespace Magro.Compiler
 {
     internal class SyakeToken
     {
         public TokenKind TokenKind { get; set; }
-        public Location BeginLocation { get; set; }
-        public Location EndLocation { get; set; }
+        public CodeLocation BeginLocation { get; set; }
+        public CodeLocation EndLocation { get; set; }
         public string Content { get; set; }
 
-        public SyakeToken(TokenKind tokenKind, Location beginLocation, Location endLocation)
+        public SyakeToken(TokenKind tokenKind, CodeLocation beginLocation, CodeLocation endLocation)
         {
             TokenKind = tokenKind;
             BeginLocation = beginLocation;

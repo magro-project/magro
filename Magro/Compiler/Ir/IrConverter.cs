@@ -1,9 +1,7 @@
-﻿using Magro.Ikura;
-using Magro.Syake;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Magro.Ir
+namespace Magro.Compiler
 {
     internal class IrConverter
     {
@@ -26,11 +24,50 @@ namespace Magro.Ir
 
         public IrStatement ConvertStatement(SyStatement statement)
         {
+            if (statement.StatementKind == SyStatementKind.VariableDeclaration)
+            {
+                var varDecl = (SyVariableDeclaration)statement;
+
+                return new IrVariableDeclaration()
+                {
+                    Name = varDecl.Name,
+                    Initializer = ConvertExpression(varDecl.Initializer),
+                };
+            }
+
             throw new NotImplementedException();
         }
 
         public IrExpression ConvertExpression(SyExpression expression)
         {
+            if (expression.ExpressionKind == SyExpressionKind.ValueExpression)
+            {
+                var valueExpr = (SyValueExpression)expression;
+
+                return new IrValueExpression()
+                {
+                    Value = valueExpr.Value,
+                    ValueKind = ConvertValueKind(valueExpr.ValueKind),
+                };
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public IrValueKind ConvertValueKind(SyValueKind valueKind)
+        {
+            if (valueKind == SyValueKind.Number)
+                return IrValueKind.Number;
+
+            if (valueKind == SyValueKind.String)
+                return IrValueKind.String;
+
+            if (valueKind == SyValueKind.Boolean)
+                return IrValueKind.Boolean;
+
+            if (valueKind == SyValueKind.Null)
+                return IrValueKind.Null;
+
             throw new NotImplementedException();
         }
 

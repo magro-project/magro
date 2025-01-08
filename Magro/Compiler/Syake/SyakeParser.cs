@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
-namespace Magro.Syake
+namespace Magro.Compiler
 {
     internal partial class SyakeParser
     {
-        public SyModuleDeclaration Parse(string moduleName, StreamReader source)
+        public SyModuleDeclaration Parse(SyakeScanner scanner, string moduleName)
         {
-            var reader = new SyakeTokenReader(source);
             var statements = new List<SyStatement>();
 
-            while (!reader.Is(TokenKind.EOF))
+            while (!scanner.Is(TokenKind.EOF))
             {
-                statements.AddRange(ParseStatement(reader));
+                statements.AddRange(ParseStatement(scanner));
             }
 
             return new SyModuleDeclaration()

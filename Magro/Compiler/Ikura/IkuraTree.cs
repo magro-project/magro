@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Magro.Ikura
+namespace Magro.Compiler
 {
     internal class IkModuleDeclaration
     {

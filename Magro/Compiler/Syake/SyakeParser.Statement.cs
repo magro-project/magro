@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Magro.Syake
+namespace Magro.Compiler
 {
     internal partial class SyakeParser
     {
-        public List<SyStatement> ParseStatement(SyakeTokenReader reader)
+        public List<SyStatement> ParseStatement(SyakeScanner scanner)
         {
-            if (reader.Is("function"))
+            if (scanner.Is("function"))
             {
-                reader.Next();
-                reader.Expect(TokenKind.Word);
-                var name = reader.GetTokenContent();
-                reader.Next();
-                var parameters = ParseParameters(reader);
-                var block = ParseBlock(reader);
+                scanner.Next();
+                scanner.Expect(TokenKind.Word);
+                var name = scanner.GetTokenContent();
+                scanner.Next();
+                var parameters = ParseParameters(scanner);
+                var block = ParseBlock(scanner);
 
                 return new List<SyStatement>()
                 {
@@ -27,22 +27,22 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("var"))
+            if (scanner.Is("var"))
             {
-                reader.Next();
+                scanner.Next();
 
                 var statements = new List<SyStatement>();
                 while (true)
                 {
-                    reader.Expect(TokenKind.Word);
-                    var name = reader.GetTokenContent();
-                    reader.Next();
+                    scanner.Expect(TokenKind.Word);
+                    var name = scanner.GetTokenContent();
+                    scanner.Next();
 
                     SyExpression initializer = null;
-                    if (reader.Is(TokenKind.Equal))
+                    if (scanner.Is(TokenKind.Equal))
                     {
-                        reader.Next();
-                        initializer = ParseExpression(reader);
+                        scanner.Next();
+                        initializer = ParseExpression(scanner);
                     }
 
                     statements.Add(new SyVariableDeclaration()
@@ -52,9 +52,9 @@ namespace Magro.Syake
                     });
 
                     // 「,」で区切って複数の変数を宣言できる
-                    if (reader.Is(TokenKind.Comma))
+                    if (scanner.Is(TokenKind.Comma))
                     {
-                        reader.Next();
+                        scanner.Next();
                     }
                     else
                     {
@@ -62,29 +62,29 @@ namespace Magro.Syake
                     }
                 }
 
-                reader.Expect(TokenKind.SemiCollon);
-                reader.Next();
+                scanner.Expect(TokenKind.SemiCollon);
+                scanner.Next();
 
                 return statements;
             }
 
-            if (reader.Is("if"))
+            if (scanner.Is("if"))
             {
-                reader.Next();
-                reader.Expect(TokenKind.OpenParen);
-                reader.Next();
-                var condition = ParseExpression(reader);
-                reader.Expect(TokenKind.CloseParen);
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.OpenParen);
+                scanner.Next();
+                var condition = ParseExpression(scanner);
+                scanner.Expect(TokenKind.CloseParen);
+                scanner.Next();
 
                 SyBlock thenBlock;
-                if (reader.Is(TokenKind.OpenBrace))
+                if (scanner.Is(TokenKind.OpenBrace))
                 {
-                    thenBlock = ParseBlock(reader);
+                    thenBlock = ParseBlock(scanner);
                 }
                 else
                 {
-                    var statements = ParseStatement(reader);
+                    var statements = ParseStatement(scanner);
                     thenBlock = new SyBlock()
                     {
                         Statements = statements,
@@ -92,17 +92,17 @@ namespace Magro.Syake
                 }
 
                 SyBlock elseBlock = null;
-                if (reader.Is("else"))
+                if (scanner.Is("else"))
                 {
-                    reader.Next();
+                    scanner.Next();
 
-                    if (reader.Is(TokenKind.OpenBrace))
+                    if (scanner.Is(TokenKind.OpenBrace))
                     {
-                        elseBlock = ParseBlock(reader);
+                        elseBlock = ParseBlock(scanner);
                     }
                     else
                     {
-                        var statements = ParseStatement(reader);
+                        var statements = ParseStatement(scanner);
                         elseBlock = new SyBlock()
                         {
                             Statements = statements,
@@ -121,23 +121,23 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("while"))
+            if (scanner.Is("while"))
             {
-                reader.Next();
-                reader.Expect(TokenKind.OpenParen);
-                reader.Next();
-                var condition = ParseExpression(reader);
-                reader.Expect(TokenKind.CloseParen);
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.OpenParen);
+                scanner.Next();
+                var condition = ParseExpression(scanner);
+                scanner.Expect(TokenKind.CloseParen);
+                scanner.Next();
 
                 SyBlock loopBlock;
-                if (reader.Is(TokenKind.OpenBrace))
+                if (scanner.Is(TokenKind.OpenBrace))
                 {
-                    loopBlock = ParseBlock(reader);
+                    loopBlock = ParseBlock(scanner);
                 }
                 else
                 {
-                    var statements = ParseStatement(reader);
+                    var statements = ParseStatement(scanner);
                     loopBlock = new SyBlock()
                     {
                         Statements = statements,
@@ -154,30 +154,30 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("for"))
+            if (scanner.Is("for"))
             {
-                reader.Next();
-                reader.Expect(TokenKind.OpenParen);
-                reader.Next();
-                reader.Expect("var");
-                reader.Next();
-                reader.Expect(TokenKind.Word);
-                var name = reader.GetTokenContent();
-                reader.Next();
-                reader.Expect("in");
-                reader.Next();
-                var iterable = ParseExpression(reader);
-                reader.Expect(TokenKind.CloseParen);
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.OpenParen);
+                scanner.Next();
+                scanner.Expect("var");
+                scanner.Next();
+                scanner.Expect(TokenKind.Word);
+                var name = scanner.GetTokenContent();
+                scanner.Next();
+                scanner.Expect("in");
+                scanner.Next();
+                var iterable = ParseExpression(scanner);
+                scanner.Expect(TokenKind.CloseParen);
+                scanner.Next();
 
                 SyBlock loopBlock;
-                if (reader.Is(TokenKind.OpenBrace))
+                if (scanner.Is(TokenKind.OpenBrace))
                 {
-                    loopBlock = ParseBlock(reader);
+                    loopBlock = ParseBlock(scanner);
                 }
                 else
                 {
-                    var statements = ParseStatement(reader);
+                    var statements = ParseStatement(scanner);
                     loopBlock = new SyBlock()
                     {
                         Statements = statements,
@@ -195,11 +195,11 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("break"))
+            if (scanner.Is("break"))
             {
-                reader.Next();
-                reader.Expect(TokenKind.SemiCollon);
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.SemiCollon);
+                scanner.Next();
 
                 return new List<SyStatement>()
                 {
@@ -207,11 +207,11 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("continue"))
+            if (scanner.Is("continue"))
             {
-                reader.Next();
-                reader.Expect(TokenKind.SemiCollon);
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.SemiCollon);
+                scanner.Next();
 
                 return new List<SyStatement>()
                 {
@@ -219,18 +219,18 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("return"))
+            if (scanner.Is("return"))
             {
-                reader.Next();
+                scanner.Next();
 
                 SyExpression value = null;
-                if (!reader.Is(TokenKind.SemiCollon))
+                if (!scanner.Is(TokenKind.SemiCollon))
                 {
-                    value = ParseExpression(reader);
+                    value = ParseExpression(scanner);
                 }
 
-                reader.Expect(TokenKind.SemiCollon);
-                reader.Next();
+                scanner.Expect(TokenKind.SemiCollon);
+                scanner.Next();
 
                 return new List<SyStatement>()
                 {
@@ -241,12 +241,12 @@ namespace Magro.Syake
                 };
             }
 
-            var expression = ParseExpression(reader);
+            var expression = ParseExpression(scanner);
 
             // expression statement
-            if (reader.Is(TokenKind.SemiCollon))
+            if (scanner.Is(TokenKind.SemiCollon))
             {
-                reader.Next();
+                scanner.Next();
 
                 return new List<SyStatement>()
                 {
@@ -258,12 +258,12 @@ namespace Magro.Syake
             }
 
             // assign statement
-            if (reader.Is(TokenKind.Equal))
+            if (scanner.Is(TokenKind.Equal))
             {
-                reader.Next();
-                var right = ParseExpression(reader);
-                reader.Expect(TokenKind.SemiCollon);
-                reader.Next();
+                scanner.Next();
+                var right = ParseExpression(scanner);
+                scanner.Expect(TokenKind.SemiCollon);
+                scanner.Next();
 
                 return new List<SyStatement>()
                 {
@@ -276,11 +276,11 @@ namespace Magro.Syake
             }
 
             // increment statement
-            if (reader.Is(TokenKind.Plus2))
+            if (scanner.Is(TokenKind.Plus2))
             {
-                reader.Next();
-                reader.Expect(TokenKind.SemiCollon);
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.SemiCollon);
+                scanner.Next();
 
                 return new List<SyStatement>()
                 {
@@ -292,11 +292,11 @@ namespace Magro.Syake
             }
 
             // decrement statement
-            if (reader.Is(TokenKind.Minus2))
+            if (scanner.Is(TokenKind.Minus2))
             {
-                reader.Next();
-                reader.Expect(TokenKind.SemiCollon);
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.SemiCollon);
+                scanner.Next();
 
                 return new List<SyStatement>()
                 {
@@ -307,47 +307,47 @@ namespace Magro.Syake
                 };
             }
 
-            throw new ApplicationException("Unexpected token " + reader.GetToken());
+            throw new ApplicationException("Unexpected token " + scanner.GetToken());
         }
 
-        public List<string> ParseParameters(SyakeTokenReader reader)
+        public List<string> ParseParameters(SyakeScanner scanner)
         {
-            reader.Expect(TokenKind.OpenParen);
-            reader.Next();
+            scanner.Expect(TokenKind.OpenParen);
+            scanner.Next();
 
             var parameters = new List<string>();
 
-            while (!reader.Is(TokenKind.CloseParen))
+            while (!scanner.Is(TokenKind.CloseParen))
             {
-                reader.Expect(TokenKind.Word);
-                parameters.Add(reader.GetTokenContent());
-                reader.Next();
+                scanner.Expect(TokenKind.Word);
+                parameters.Add(scanner.GetTokenContent());
+                scanner.Next();
 
-                if (reader.Is(TokenKind.Comma))
+                if (scanner.Is(TokenKind.Comma))
                 {
-                    reader.Next();
+                    scanner.Next();
                 }
             }
 
-            reader.Expect(TokenKind.CloseParen);
-            reader.Next();
+            scanner.Expect(TokenKind.CloseParen);
+            scanner.Next();
 
             return parameters;
         }
 
-        public SyBlock ParseBlock(SyakeTokenReader reader)
+        public SyBlock ParseBlock(SyakeScanner scanner)
         {
-            reader.Expect(TokenKind.OpenBrace);
-            reader.Next();
+            scanner.Expect(TokenKind.OpenBrace);
+            scanner.Next();
 
             var statements = new List<SyStatement>();
-            while (!reader.Is(TokenKind.CloseBrace))
+            while (!scanner.Is(TokenKind.CloseBrace))
             {
-                statements.AddRange(ParseStatement(reader));
+                statements.AddRange(ParseStatement(scanner));
             }
 
-            reader.Expect(TokenKind.CloseBrace);
-            reader.Next();
+            scanner.Expect(TokenKind.CloseBrace);
+            scanner.Next();
 
             return new SyBlock()
             {

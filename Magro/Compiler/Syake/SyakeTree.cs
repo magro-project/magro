@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Magro.Syake
+namespace Magro.Compiler
 {
     internal class SyModuleDeclaration : SyDeclaration
     {

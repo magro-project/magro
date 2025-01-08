@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Magro.Syake
+namespace Magro.Compiler
 {
     internal partial class SyakeParser
     {
-        public SyExpression ParseExpression(SyakeTokenReader reader)
+        public SyExpression ParseExpression(SyakeScanner scanner)
         {
-            return ParsePratt(reader, 0);
+            return ParsePratt(scanner, 0);
         }
 
         public List<IOperator> Operators = new List<IOperator>()
@@ -33,7 +33,7 @@ namespace Magro.Syake
             new InfixOperator(TokenKind.Or2,             6,  7),
         };
 
-        private SyExpression ParsePratt(SyakeTokenReader reader, int minimumBindPower)
+        private SyExpression ParsePratt(SyakeScanner scanner, int minimumBindPower)
         {
             // pratt parsing
             // https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
@@ -42,21 +42,21 @@ namespace Magro.Syake
 
             // find prefix operator
             var prefix = (PrefixOperator)Operators.Find(x =>
-                x.OperatorKind == OperatorKind.PrefixOperator && ((PrefixOperator)x).TokenKind == reader.GetTokenKind());
+                x.OperatorKind == OperatorKind.PrefixOperator && ((PrefixOperator)x).TokenKind == scanner.GetTokenKind());
             if (prefix != null)
             {
-                left = ParsePrefix(reader);
+                left = ParsePrefix(scanner);
             }
             else
             {
-                left = ParseAtom(reader);
+                left = ParseAtom(scanner);
             }
 
             while (true)
             {
                 // find postfix operator
                 var postfix = (PostfixOperator)Operators.Find(x =>
-                    x.OperatorKind == OperatorKind.PostfixOperator && ((PostfixOperator)x).TokenKind == reader.GetTokenKind());
+                    x.OperatorKind == OperatorKind.PostfixOperator && ((PostfixOperator)x).TokenKind == scanner.GetTokenKind());
                 if (postfix != null)
                 {
                     if (postfix.BindPower < minimumBindPower)
@@ -64,13 +64,13 @@ namespace Magro.Syake
                         break;
                     }
 
-                    left = ParsePostfix(reader, left);
+                    left = ParsePostfix(scanner, left);
                     continue;
                 }
 
                 // find infix operator
                 var infix = (InfixOperator)Operators.Find(x =>
-                    x.OperatorKind == OperatorKind.InfixOperator && ((InfixOperator)x).TokenKind == reader.GetTokenKind());
+                    x.OperatorKind == OperatorKind.InfixOperator && ((InfixOperator)x).TokenKind == scanner.GetTokenKind());
                 if (infix != null)
                 {
                     if (infix.LeftBindPower < minimumBindPower)
@@ -78,7 +78,7 @@ namespace Magro.Syake
                         break;
                     }
 
-                    left = ParseInfix(reader, left, infix.RightBindPower);
+                    left = ParseInfix(scanner, left, infix.RightBindPower);
                     continue;
                 }
 
@@ -88,12 +88,12 @@ namespace Magro.Syake
             return left;
         }
 
-        private SyExpression ParseAtom(SyakeTokenReader reader)
+        private SyExpression ParseAtom(SyakeScanner scanner)
         {
-            if (reader.Is(TokenKind.Number))
+            if (scanner.Is(TokenKind.Number))
             {
-                var value = reader.GetTokenContent();
-                reader.Next();
+                var value = scanner.GetTokenContent();
+                scanner.Next();
 
                 return new SyValueExpression()
                 {
@@ -102,10 +102,10 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is(TokenKind.String))
+            if (scanner.Is(TokenKind.String))
             {
-                var value = reader.GetTokenContent();
-                reader.Next();
+                var value = scanner.GetTokenContent();
+                scanner.Next();
 
                 return new SyValueExpression()
                 {
@@ -114,9 +114,9 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("true"))
+            if (scanner.Is("true"))
             {
-                reader.Next();
+                scanner.Next();
 
                 return new SyValueExpression()
                 {
@@ -125,9 +125,9 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("false"))
+            if (scanner.Is("false"))
             {
-                reader.Next();
+                scanner.Next();
 
                 return new SyValueExpression()
                 {
@@ -136,9 +136,9 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is("null"))
+            if (scanner.Is("null"))
             {
-                reader.Next();
+                scanner.Next();
 
                 return new SyValueExpression()
                 {
@@ -147,10 +147,10 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is(TokenKind.Word))
+            if (scanner.Is(TokenKind.Word))
             {
-                var name = reader.GetTokenContent();
-                reader.Next();
+                var name = scanner.GetTokenContent();
+                scanner.Next();
 
                 return new SyReferenceExpression()
                 {
@@ -159,12 +159,12 @@ namespace Magro.Syake
             }
 
             // grouping operator
-            if (reader.Is(TokenKind.OpenParen))
+            if (scanner.Is(TokenKind.OpenParen))
             {
-                reader.Next();
-                var expression = ParseExpression(reader);
-                reader.Expect(TokenKind.CloseParen);
-                reader.Next();
+                scanner.Next();
+                var expression = ParseExpression(scanner);
+                scanner.Expect(TokenKind.CloseParen);
+                scanner.Next();
 
                 return new SyGroupingExpression()
                 {
@@ -172,14 +172,14 @@ namespace Magro.Syake
                 };
             }
 
-            throw new ApplicationException("Unexpected token " + reader.GetToken());
+            throw new ApplicationException("Unexpected token " + scanner.GetToken());
         }
 
-        private SyExpression ParsePrefix(SyakeTokenReader reader)
+        private SyExpression ParsePrefix(SyakeScanner scanner)
         {
-            var opTokenKind = reader.GetTokenKind();
-            reader.Next();
-            var target = ParseExpression(reader);
+            var opTokenKind = scanner.GetTokenKind();
+            scanner.Next();
+            var target = ParseExpression(scanner);
 
             if (opTokenKind == TokenKind.Not)
             {
@@ -207,14 +207,14 @@ namespace Magro.Syake
                 };
             }
 
-            throw new ApplicationException("Unexpected token " + reader.GetToken());
+            throw new ApplicationException("Unexpected token " + scanner.GetToken());
         }
 
-        private SyExpression ParseInfix(SyakeTokenReader reader, SyExpression left, int minimumBindPower)
+        private SyExpression ParseInfix(SyakeScanner scanner, SyExpression left, int minimumBindPower)
         {
-            var opTokenKind = reader.GetTokenKind();
-            reader.Next();
-            var right = ParsePratt(reader, minimumBindPower);
+            var opTokenKind = scanner.GetTokenKind();
+            scanner.Next();
+            var right = ParsePratt(scanner, minimumBindPower);
 
             if (opTokenKind == TokenKind.Plus)
             {
@@ -346,23 +346,23 @@ namespace Magro.Syake
                 };
             }
 
-            throw new ApplicationException("Unexpected token " + reader.GetToken());
+            throw new ApplicationException("Unexpected token " + scanner.GetToken());
         }
 
-        private SyExpression ParsePostfix(SyakeTokenReader reader, SyExpression expr)
+        private SyExpression ParsePostfix(SyakeScanner scanner, SyExpression expr)
         {
-            if (reader.Is(TokenKind.OpenParen))
+            if (scanner.Is(TokenKind.OpenParen))
             {
-                reader.Next();
+                scanner.Next();
 
                 var arguments = new List<SyExpression>();
-                while (!reader.Is(TokenKind.CloseParen))
+                while (!scanner.Is(TokenKind.CloseParen))
                 {
-                    arguments.Add(ParseExpression(reader));
+                    arguments.Add(ParseExpression(scanner));
 
-                    if (reader.Is(TokenKind.Comma))
+                    if (scanner.Is(TokenKind.Comma))
                     {
-                        reader.Next();
+                        scanner.Next();
                     }
                     else
                     {
@@ -370,8 +370,8 @@ namespace Magro.Syake
                     }
                 }
 
-                reader.Expect(TokenKind.CloseParen);
-                reader.Next();
+                scanner.Expect(TokenKind.CloseParen);
+                scanner.Next();
 
                 return new SyCallFuncExpression()
                 {
@@ -380,18 +380,18 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is(TokenKind.OpenBracket))
+            if (scanner.Is(TokenKind.OpenBracket))
             {
-                reader.Next();
+                scanner.Next();
 
                 var indexes = new List<SyExpression>();
-                while (!reader.Is(TokenKind.CloseBracket))
+                while (!scanner.Is(TokenKind.CloseBracket))
                 {
-                    indexes.Add(ParseExpression(reader));
+                    indexes.Add(ParseExpression(scanner));
 
-                    if (reader.Is(TokenKind.Comma))
+                    if (scanner.Is(TokenKind.Comma))
                     {
-                        reader.Next();
+                        scanner.Next();
                     }
                     else
                     {
@@ -399,8 +399,8 @@ namespace Magro.Syake
                     }
                 }
 
-                reader.Expect(TokenKind.CloseBracket);
-                reader.Next();
+                scanner.Expect(TokenKind.CloseBracket);
+                scanner.Next();
 
                 return new SyIndexAccessExpression()
                 {
@@ -409,12 +409,12 @@ namespace Magro.Syake
                 };
             }
 
-            if (reader.Is(TokenKind.Dot))
+            if (scanner.Is(TokenKind.Dot))
             {
-                reader.Next();
-                reader.Expect(TokenKind.Word);
-                var memberName = reader.GetTokenContent();
-                reader.Next();
+                scanner.Next();
+                scanner.Expect(TokenKind.Word);
+                var memberName = scanner.GetTokenContent();
+                scanner.Next();
 
                 return new SyMemberAccessExpression()
                 {
@@ -423,7 +423,7 @@ namespace Magro.Syake
                 };
             }
 
-            throw new ApplicationException("Unexpected token " + reader.GetToken());
+            throw new ApplicationException("Unexpected token " + scanner.GetToken());
         }
     }
 

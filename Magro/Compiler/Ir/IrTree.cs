@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Magro.Ir
+namespace Magro.Compiler
 {
     internal class IrModuleDeclaration
     {
@@ -19,7 +19,7 @@ namespace Magro.Ir
 
     internal enum IrStatementKind
     {
-        //VariableDeclaration,
+        VariableDeclaration,
         //FunctionDeclaration,
         //AssignStatement,
         //IncrementStatement,
@@ -32,6 +32,13 @@ namespace Magro.Ir
         //ReturnStatement,
         //Block,
         //ExpressionStatement,
+    }
+
+    internal class IrVariableDeclaration : IrStatement
+    {
+        public IrStatementKind StatementKind { get; } = IrStatementKind.VariableDeclaration;
+        public string Name { get; set; }
+        public IrExpression Initializer { get; set; }
     }
 
     // -------------------------------------------------------------------------------------------

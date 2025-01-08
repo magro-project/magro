@@ -1,8 +1,7 @@
-﻿using Magro.Golang.GolangAst;
-using Magro.Ir;
-using Magro.Syake;
+﻿using Magro.Compiler;
 using System;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -67,21 +66,13 @@ namespace Magro
 
         private void ExecButton_Click(object sender, RoutedEventArgs e)
         {
-            var parser = new SyakeParser();
-
-            SyModuleDeclaration module;
-            using (var reader = new StreamReader("../../main.ss"))
+            Directory.CreateDirectory("../../temp");
+            using (var reader = new StreamReader("../../main.ss", Encoding.UTF8))
+            using (var writer = new StreamWriter("../../temp/main.go", false, Encoding.UTF8))
             {
-                module = parser.Parse("main", reader);
+                var compiler = new SyakeCompiler();
+                compiler.Compile(reader, writer);
             }
-
-            var converter = new IrConverter();
-            var irModule = converter.ConvertModule(module);
-
-            var codegen = new GolangGenerator();
-            var goCode = codegen.Generate(irModule);
-
-            Console.WriteLine(goCode);
 
             //if (!File.Exists("runtime.exe"))
             //{

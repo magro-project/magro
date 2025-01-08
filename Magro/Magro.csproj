@@ -68,19 +68,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Ikura\IkuraTree.cs" />
-    <Compile Include="Golang\GolangGenerator.cs" />
-    <Compile Include="Ir\IrTree.cs" />
-    <Compile Include="Serializer\SerializerContext.cs" />
-    <Compile Include="Syake\Syntax\CharStream.cs" />
-    <Compile Include="Ir\IrConverter.cs" />
-    <Compile Include="Syake\Syntax\SyakeParser.Expression.cs" />
-    <Compile Include="Syake\Syntax\Location.cs" />
-    <Compile Include="Syake\Syntax\SyakeTree.cs" />
-    <Compile Include="Syake\Syntax\SyakeParser.cs" />
-    <Compile Include="Syake\Syntax\SyakeTokenReader.cs" />
-    <Compile Include="Syake\Syntax\SyakeParser.Statement.cs" />
-    <Compile Include="Syake\Syntax\SyakeToken.cs" />
+    <Compile Include="Compiler\CodeWriter.cs" />
+    <Compile Include="Compiler\Ikura\IkuraTree.cs" />
+    <Compile Include="Compiler\Golang\GolangGenerator.cs" />
+    <Compile Include="Compiler\Ir\IrTree.cs" />
+    <Compile Include="Compiler\CodeReader.cs" />
+    <Compile Include="Compiler\Ir\IrConverter.cs" />
+    <Compile Include="Compiler\IkuraCompiler.cs" />
+    <Compile Include="Compiler\SyakeCompiler.cs" />
+    <Compile Include="Compiler\Syake\SyakeParser.Expression.cs" />
+    <Compile Include="Compiler\CodeLocation.cs" />
+    <Compile Include="Compiler\Syake\SyakeTree.cs" />
+    <Compile Include="Compiler\Syake\SyakeParser.cs" />
+    <Compile Include="Compiler\Syake\SyakeScanner.cs" />
+    <Compile Include="Compiler\Syake\SyakeParser.Statement.cs" />
+    <Compile Include="Compiler\Syake\SyakeToken.cs" />
     <Compile Include="VersionWindow.xaml.cs">
       <DependentUpon>VersionWindow.xaml</DependentUpon>
     </Compile>
@@ -142,8 +144,6 @@
     <Resource Include="Icons\Save.png" />
     <Resource Include="Icons\Settings.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Syake\Semantics\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

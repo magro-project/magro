@@ -7,7 +7,6 @@ Currently under development!
 
 ## Projects
 - Magro
-- runtime
 
 ## Scripts
 

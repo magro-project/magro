@@ -59,5 +59,66 @@ namespace Magro.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   @echo off
+        ///go mod tidy
+        ///go build .
+        /// に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string build_bat {
+            get {
+                return ResourceManager.GetString("build_bat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   module magro
+        ///
+        ///go 1.23.4
+        ///
+        ///require github.com/hajimehoshi/ebiten/v2 v2.8.6
+        /// に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string go_mod {
+            get {
+                return ResourceManager.GetString("go_mod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   package main
+        ///
+        ///import (
+        ///	&quot;log&quot;
+        ///
+        ///	&quot;github.com/hajimehoshi/ebiten/v2&quot;
+        ///	&quot;github.com/hajimehoshi/ebiten/v2/ebitenutil&quot;
+        ///)
+        ///
+        ///type Game struct{}
+        ///
+        ///func (g *Game) Update() error {
+        ///	return nil
+        ///}
+        ///
+        ///func (g *Game) Draw(screen *ebiten.Image) {
+        ///	ebitenutil.DebugPrint(screen, &quot;Magro world&quot;)
+        ///}
+        ///
+        ///func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+        ///	return 320, 240
+        ///}
+        ///
+        ///func main() {
+        ///	ebiten.SetWindowSize(640, 480)
+        ///	ebiten.SetWindowTitle(&quot;magro/runtime&quot;)
+        ///	if err := ebi [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string main_go {
+            get {
+                return ResourceManager.GetString("main_go", resourceCulture);
+            }
+        }
     }
 }

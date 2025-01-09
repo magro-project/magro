@@ -21,7 +21,7 @@ namespace Magro.Compiler
     {
         VariableDeclaration,
         //FunctionDeclaration,
-        //AssignStatement,
+        AssignStatement,
         //IncrementStatement,
         //DecrementStatement,
         //IfStatement,
@@ -39,6 +39,13 @@ namespace Magro.Compiler
         public IrStatementKind StatementKind { get; } = IrStatementKind.VariableDeclaration;
         public string Name { get; set; }
         public IrExpression Initializer { get; set; }
+    }
+
+    internal class IrAssignStatement : IrStatement
+    {
+        public IrStatementKind StatementKind { get; } = IrStatementKind.AssignStatement;
+        public IrExpression Target { get; set; }
+        public IrExpression Content { get; set; }
     }
 
     // -------------------------------------------------------------------------------------------

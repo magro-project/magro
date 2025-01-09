@@ -38,7 +38,7 @@
                 </MenuItem>
             </Menu>
             <ToolBar>
-                <Button Click="ExecButton_Click">
+                <Button x:Name="ExecButton" Click="ExecButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Icons\Play.png" Width="16"/>
                         <Label Content="実行" Padding="0"/>

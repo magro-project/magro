@@ -35,6 +35,17 @@ namespace Magro.Compiler
                 };
             }
 
+            if (statement.StatementKind == SyStatementKind.AssignStatement)
+            {
+                var assignment = (SyAssignStatement)statement;
+
+                return new IrAssignStatement()
+                {
+                    Target = ConvertExpression(assignment.Target),
+                    Content = ConvertExpression(assignment.Content),
+                };
+            }
+
             throw new NotImplementedException();
         }
 
@@ -48,6 +59,16 @@ namespace Magro.Compiler
                 {
                     Value = valueExpr.Value,
                     ValueKind = ConvertValueKind(valueExpr.ValueKind),
+                };
+            }
+
+            if (expression.ExpressionKind == SyExpressionKind.ReferenceExpression)
+            {
+                var refExpr = (SyReferenceExpression)expression;
+
+                return new IrReferenceExpression()
+                {
+                    Name = refExpr.Name,
                 };
             }
 

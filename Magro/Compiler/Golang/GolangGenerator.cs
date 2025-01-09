@@ -6,7 +6,7 @@
         {
             writer.WriteLine("package main");
             writer.WriteLine();
-            writer.WriteLine("func main() {");
+            writer.WriteLine("func ScriptMain() {");
 
             writer.EnterIndent();
             foreach (var statement in module.Statements)
@@ -29,6 +29,16 @@
                 EmitExpression(writer, varDecl.Initializer);
                 writer.WriteLine();
             }
+
+            if (statement.StatementKind == IrStatementKind.AssignStatement)
+            {
+                var assign = (IrAssignStatement)statement;
+                writer.WriteIndent();
+                EmitExpression(writer, assign.Target);
+                writer.Write(" = ");
+                EmitExpression(writer, assign.Content);
+                writer.WriteLine();
+            }
         }
 
         public void EmitExpression(CodeWriter writer, IrExpression expression)
@@ -37,6 +47,12 @@
             {
                 var valueExpr = (IrValueExpression)expression;
                 writer.Write(valueExpr.Value.ToString());
+            }
+
+            if (expression.ExpressionKind == IrExpressionKind.ReferenceExpression)
+            {
+                var refExpr = (IrReferenceExpression)expression;
+                writer.Write(refExpr.Name);
             }
         }
     }
